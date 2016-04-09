@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'chart/basic'
+
+  get 'chart/premium'
+
   devise_for :users
   get 'welcome/index'
 
