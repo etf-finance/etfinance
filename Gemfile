@@ -41,7 +41,35 @@ group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
 
+  gem 'binding_of_caller'
+  gem "better_errors"
+  gem "quiet_assets"
+  gem "letter_opener"
+  gem "pry-rails"
+  gem "pry-byebug"
+
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
 
+gem 'google_drive', '~> 1.0', '>= 1.0.6'
+
+gem 'yahoo-finance'
+
+gem 'devise'
+
+gem 'gibbon', '~> 2.2'
+
+gem 'bootstrap-sass'
+
+gem 'font-awesome-sass', '~> 4.5.0'
+
+gem "font-awesome-rails", '~> 4.5.0'
+
+gem 'simple_form'
+
+gem 'appsignal'
+
+gem 'rails_admin'
+
+gem 'autoprefixer-rails'
