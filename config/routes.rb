@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get 'chart/premium'
 
-  devise_for :users, controllers: {registration: "registrations"}
+  devise_for :users, controllers: {registration: "registrations "}
   get 'welcome/index'
 
   # The priority is based upon order of creation: first created -> highest priority.
