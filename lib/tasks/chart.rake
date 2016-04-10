@@ -3,7 +3,7 @@ namespace :chart do
   task update_spreadsheet: :environment do
     # disable_active_record_logger
     yahoo_client = YahooFinance::Client.new
-    data = yahoo_client.quotes(["AAPL", "FB"], [:ask, :bid, :last_trade_date])
+    data = yahoo_client.quotes(["AAPL", "FB"], [:ask, :bid, :last_trade_date, :ask_real_time])
     session = GoogleDrive.saved_session("config.json")
     # Changer la méthode de sélection du spreadsheet
     spreadsheet = session.files.first
@@ -31,6 +31,19 @@ namespace :chart do
     # unfinished_bookings.each do |booking|
     #   call_and_print_if_changed :update_status, booking
     # end
+
+    puts "Done."
+  end
+
+  desc "populate Quote model"
+  task new_quote: :environment do
+  # disable_active_record_logger
+    yahoo_client = YahooFinance::Client.new
+    data = yahoo_client.quotes(["AAPL", "FB"], [:ask, :bid, :last_trade_date])
+    quote = Quote.create(value: data[0].ask.to_f*rand)
+
+    ap quote
+
 
     puts "Done."
   end
