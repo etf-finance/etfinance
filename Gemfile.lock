@@ -60,6 +60,7 @@ GEM
       sass (>= 3.3.4)
     builder (3.2.2)
     byebug (8.2.4)
+    chartkick (1.3.2)
     coderay (1.1.1)
     coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
@@ -118,6 +119,8 @@ GEM
       multi_json (~> 1.11)
       os (~> 0.9)
       signet (~> 0.7)
+    groupdate (2.5.2)
+      activesupport (>= 3)
     haml (4.0.6)
       tilt
     i18n (0.7.0)
@@ -289,6 +292,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass
   byebug
+  chartkick
   coffee-rails (~> 4.1.0)
   devise
   figaro
@@ -296,6 +300,7 @@ DEPENDENCIES
   font-awesome-sass (~> 4.5.0)
   gibbon (~> 2.2)
   google_drive (~> 1.0, >= 1.0.6)
+  groupdate
   jbuilder (~> 2.0)
   jquery-rails
   letter_opener
