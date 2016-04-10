@@ -37,14 +37,12 @@ namespace :chart do
 
   desc "populate Quote model"
   task new_quote: :environment do
-    # disable_active_record_logger
-    10.times do
-      yahoo_client = YahooFinance::Client.new
-      data = yahoo_client.quotes(["AAPL", "FB"], [:ask, :bid, :last_trade_date])
-      quote = Quote.create(value: data[0].ask.to_f*rand)
+  # disable_active_record_logger
+    yahoo_client = YahooFinance::Client.new
+    data = yahoo_client.quotes(["AAPL", "FB"], [:ask, :bid, :last_trade_date])
+    quote = Quote.create(value: data[0].ask.to_f*rand)
 
-      ap quote
-    end
+    ap quote
 
 
     puts "Done."
