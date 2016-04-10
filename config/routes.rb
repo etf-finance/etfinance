@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get 'chart/premium'
 
-  devise_for :users
+  devise_for :users, controllers: {registration: "registrations"}
   get 'welcome/index'
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
+    resources :subscribers
 
   # Example resource route with options:
   #   resources :products do
