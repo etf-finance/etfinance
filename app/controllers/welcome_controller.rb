@@ -1,8 +1,9 @@
 class WelcomeController < ApplicationController
   def index
-  	@hash = User.group_by_day(:created_at).count
-  	# @hash = Hash.new
-  	# @hash[:test] = 2
-  	# @hash[:test2] = 10
+  	@quotes = Quote.pluck(:created_at, :value)
+  	@quotes.each do |el|
+  		el[1] = el[1].to_i
+  		# el[0] = el[0].strftime("%H:%M:%S%z")
+  	end
   end
 end
