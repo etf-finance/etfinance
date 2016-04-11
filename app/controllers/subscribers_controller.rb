@@ -3,9 +3,15 @@ class SubscribersController < ApplicationController
 	before_filter :authenticate_user!
 
 	def new
+		@amount = 2000
+	end
+
+	def create
+		raise
 	end
 
 	def update
+		raise
 		token = params[:stripeToken]
 
 		customer = Stripe::Customer.create(
