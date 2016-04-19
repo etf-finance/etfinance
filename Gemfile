@@ -71,6 +71,8 @@ gem 'devise'
 
 gem 'gibbon', '~> 2.2'
 
+gem 'frontend-generators'
+
 gem 'bootstrap-sass'
 
 gem 'font-awesome-sass', '~> 4.5.0'
