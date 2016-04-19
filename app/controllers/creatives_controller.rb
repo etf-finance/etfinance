@@ -1,5 +1,5 @@
 class CreativesController < ApplicationController
-  layout "creative"
+  # layout "application"
 
   def index
   end
