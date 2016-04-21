@@ -1,19 +1,8 @@
 <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
 
-<div class="container">
-	<div class="row">
-		<div class="col-xs-12">
-			<h1>Welcome#index</h1>
-			<p>Find me in app/views/welcome/index.html.erb</p>
-		</div>
-		<div class="col-xs-12">
-
-		<p class= "btn btn-primary btn-xl page-scroll">Test</p>
-		
-		<div><%= line_chart @quotes, discrete: true %></div>
-		<div><%= line_chart @hash, discrete: true %></div>
-
-		</div>
-	</div>
-</div>
-
+<%= render 'creatives/header' %>
+<%= render 'creatives/bg_primary' %>
+<%= render 'creatives/services' %>
+<%= render 'creatives/portfolio' %>
+<%= render 'creatives/call_to_action' %>
+<%= render 'creatives/contact' %>
