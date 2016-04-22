@@ -67,7 +67,7 @@ gem 'google_drive', '~> 1.0', '>= 1.0.6'
 
 gem 'yahoo-finance'
 
-gem 'devise'
+gem 'devise', '~> 4.0'
 
 gem 'gibbon', '~> 2.2'
 
