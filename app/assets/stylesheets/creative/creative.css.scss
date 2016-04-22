@@ -185,6 +185,22 @@ aside {
     }
 }
 
+.container-devise {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    text-align: center;
+    color: #fff;
+    background-image: asset-data-url("creative/header2.jpeg");
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    height: 1000px;
+    padding-top:150px;
+}
+
 header {
     position: relative;
     width: 100%;
@@ -197,12 +213,13 @@ header {
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
+
 }
 
 header .header-content {
-    position: relative;
+    // position: relative;
     width: 100%;
-    padding: 100px 15px;
+    // padding: 100px 15px;
     text-align: center;
 }
 

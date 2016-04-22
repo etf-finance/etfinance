@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">Etf Finance</a>
+            <%= link_to "Etf Finance", root_path, class: "navbar-brand page-scroll"  %>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -22,7 +22,7 @@
                 </li>
                 <% if !current_user %>
                     <li>
-                        <a class="page-scroll" href="#strategies">Sign-in</a>
+                        <%= link_to "Sign-in", new_user_session_path %>
                     </li>
                     <li>
                         <%= link_to "Sign-up", new_user_registration_path %>
