@@ -4,17 +4,13 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-$primary-color: hsla(11, 85%, 60%, 1);
-$focus-color: hsla(hue($primary-color), saturation($primary-color)+1, lightness($primary-color)-10, alpha($primary-color));
-$border-btn-color: hsla(hue($primary-color)-1, saturation($primary-color), lightness($primary-color)-7, alpha($primary-color));
-$hover-btn-color: hsla(hue($primary-color)-1, saturation($primary-color), lightness($primary-color)-5, alpha($primary-color));
-    
+// $primary-color: hsla(11, 85%, 60%, 1);
+// $focus-color: hsla(hue($primary-color), saturation($primary-color)+1, lightness($primary-color)-10, alpha($primary-color));
+// $border-btn-color: hsla(hue($primary-color)-1, saturation($primary-color), lightness($primary-color)-7, alpha($primary-color));
+// $hover-btn-color: hsla(hue($primary-color)-1, saturation($primary-color), lightness($primary-color)-5, alpha($primary-color));
 
-// #ed431f = (10, 85%, 53%, 1)
+@import "config/variables";
 
-// #ee4b28 = (11, 85%, 55%, 1)
-
-html,
 body {
     width: 100%;
     height: 100%;
