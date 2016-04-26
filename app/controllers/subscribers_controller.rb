@@ -4,6 +4,7 @@ class SubscribersController < ApplicationController
 
 	def new
 		@amount = 2000
+		@url = "http://logok.org/wp-content/uploads/2014/03/BMW-logo.png"
 	end
 
 	def create

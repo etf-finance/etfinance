@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   get 'creatives/index'
 
+  post "welcome/newsletter_subscription", to: "welcome#newsletter_subscription", as: :newsletter_subscription
+
 
 
   # Example of regular route:
