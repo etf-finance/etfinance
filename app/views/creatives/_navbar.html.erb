@@ -12,31 +12,61 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a class="page-scroll" href="#about">About</a>
-                </li>
-                <li>
-                    <a class="page-scroll" href="#services">Services</a>
-                </li>
-                <% if !current_user %>
+        <% if params[:controller] == "welcome" && params[:action] == "index" %>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <%= link_to "Sign-in", new_user_session_path %>
+                        <a class="page-scroll" href="#about">About</a>
                     </li>
                     <li>
-                        <%= link_to "Sign-up", new_user_registration_path %>
+                        <a class="page-scroll" href="#services">Services</a>
                     </li>
-                <% else %>
+                    <% if !current_user %>
+                        <li>
+                            <%= link_to "Sign-in", new_user_session_path %>
+                        </li>
+                        <li>
+                            <%= link_to "Sign-up", new_user_registration_path %>
+                        </li>
+                    <% else %>
+                        <li>
+                            <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
+                        </li>
+                    <% end %>
                     <li>
-                        <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
+                        <a class="page-scroll" href="#contact">Contact</a>
                     </li>
-                <% end %>
-                <li>
-                    <a class="page-scroll" href="#contact">Contact</a>
-                </li>
-            </ul>
-        </div>
+                </ul>
+            </div>
+        <% else %>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <%= link_to "About", root_path(:anchor => "about") %>
+                    </li>
+                    <li>
+                        <%= link_to "Services", root_path(:anchor => "services") %>                    </li>
+                    <% if !current_user %>
+                        <li>
+                            <%= link_to "Sign-in", new_user_session_path %>
+                        </li>
+                        <li>
+                            <%= link_to "Sign-up", new_user_registration_path %>
+                        </li>
+                    <% else %>
+                        <li>
+                            <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
+                        </li>
+                    <% end %>
+                    <li>
+                        <%= link_to "Contact", root_path(:anchor => "contact") %>
+                    </li>
+                </ul>
+            </div>
+
+        <% end %>
+
+        <!-- "controller"=>"welcome", "action"=>"index" -->
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container-fluid -->

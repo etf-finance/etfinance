@@ -489,10 +489,11 @@ body {
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
-    height: 1000px;
+    height: 100vh;
+    min-height: 600px;
     padding-top:150px;
 }
-
+    
 .flash-message {
     margin-left: 10%;
     font-family: arial !important;
