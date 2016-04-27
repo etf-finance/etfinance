@@ -19,8 +19,9 @@ class SubscribersController < ApplicationController
 		current_user.subscribed = true
 		current_user.stripe_id = customer.id
 		current_user.save
+		flash[:success]= 'Congratulations! You have subscribed to ETF Finance Live Chart.'
 
-		redirect_to root_path
+		redirect_to chart_premium_path
 	end
 
 	def update
