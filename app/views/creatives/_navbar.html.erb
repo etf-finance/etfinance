@@ -14,7 +14,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
+                    <li class="<%= 'active' if params[:action] == 'products' %>">
                         <%= link_to "Products", welcome_products_path%>
                     </li>
                     <li class="<%= 'active' if params[:action] == 'services' %>">
@@ -39,11 +39,14 @@
                         </li>
                     <% else %>
                         <li>
+                            <%= link_to current_user.email, root_path%>
+                        </li>
+                        <li>
                             <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
                         </li>
                     <% end %>
-                                       <li>
-                        <%= link_to "Charts", chart_premium_path, class: "btn, btn-primary"%>
+                    <li>
+                        <%= link_to "Charts", chart_premium_path, class: "btn, btn-primary", data: { no_turbolink: true }%>
                     </li>
                     
                 </ul>

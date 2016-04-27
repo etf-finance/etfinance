@@ -185,12 +185,23 @@ header {
     min-height: auto;
     text-align: center;
     color: #fff;
-    background-image: asset-data-url("creative/header2.jpg");
     background-position: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
+}
+
+#main-header {
+    background-image: asset-data-url("creative/header2.jpg");
+}
+
+#products-header {
+    background-image: asset-data-url("creative/header3.jpg");
+}
+
+#services-header {
+    background-image: asset-data-url("creative/header4.jpg");
 }
 
 header .header-content {
@@ -221,6 +232,14 @@ header .header-content .header-content-inner p {
 @media(min-width:768px) {
     header {
         min-height: 100%;
+    }
+
+    .small-header {
+        min-height: 75% !important;
+    }
+
+    .small-header > .header-content > .header-content-inner > h1 {
+        margin-top: 100px;
     }
 
 
@@ -489,7 +508,7 @@ body {
     min-height: auto;
     text-align: center;
     color: #fff;
-    background-image: asset-data-url("creative/header2.jpeg");
+    background-image: asset-data-url("creative/header5.jpg");
     background-position: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -501,14 +520,12 @@ body {
 }
     
 .flash-message {
-    margin-left: 10%;
     font-family: arial !important;
     z-index: 3;
     position: fixed;
     top: 51px;
     left: 0;
-    width: 80%;
-    // min-height: 50px;
+    width: 100%;
     padding-top: 15px;
     padding-bottom: 15px;
  }
@@ -531,5 +548,17 @@ body {
 
 .devise-links-text {
     color: black;
+}
+
+.btn-devise {
+    margin-bottom: 30px;
+}
+
+.error_notification {
+    color:  red;
+}
+
+.error {
+    color: $primary-color;
 }
 
