@@ -64,6 +64,11 @@ p {
 
 .text-faded {
     color: rgba(255,255,255,.7);
+    li {
+        text-align: left;
+        margin-left: 50px;
+        margin-right: 100px;
+    }
 }
 
 section {
@@ -217,6 +222,7 @@ header .header-content .header-content-inner p {
     header {
         min-height: 100%;
     }
+
 
     header .header-content {
         position: absolute;
@@ -506,4 +512,24 @@ body {
     padding-top: 15px;
     padding-bottom: 15px;
  }
+
+ .chart {
+    background-color: white;
+ }
+
+ .be-like {
+    margin-top: 12px;
+ }
+
+  .be-like-title {
+    margin-bottom: 40px;
+ }
+
+ ul {
+    margin-bottom: 30px;
+}
+
+.devise-links-text {
+    color: black;
+}
 

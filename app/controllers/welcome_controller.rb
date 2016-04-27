@@ -14,6 +14,9 @@ class WelcomeController < ApplicationController
   	ap @hash
   end
 
+  def services
+  end
+
   def newsletter_subscription
     if User.find_by_email(params[:email]).present?
       flash[:success]= 'Votre inscription à la newsletter ETF FINANCE est validée.'

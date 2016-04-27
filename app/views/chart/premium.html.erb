@@ -1,12 +1,18 @@
-<%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 
 <div class="container container-devise">
-<h1>Values of <%= Time.now.strftime("%b %d")%></h1>
+<h1>Values of <%= @date.strftime("%b %d")%></h1>
+<%= link_to new_subscriber_path do %>
+  <button class="btn btn-primary">Register</button>
+<% end %>
 	<div class="row">
  		<div class="col-xs-12">
-			<div><%= line_chart @quotes, discrete: true %></div>
-			<div><%= line_chart @hash, discrete: true %></div>
+ 			<%= content_tag :div, "", id: "line_chart", data: {bookings:@future_bookings_count_array}, class: "chart" %>
     </div>
 	</div>
 </div>
+
+
 

@@ -12,59 +12,42 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <% if params[:controller] == "welcome" && params[:action] == "index" %>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="#about">About</a>
+                        <%= link_to "Products", welcome_products_path%>
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#services">Services</a>
+                    <li class="<%= 'active' if params[:action] == 'services' %>">
+                        <%= link_to "Services", welcome_services_path %>
                     </li>
-                    <% if !current_user %>
+                     <% if params[:controller] == "welcome" && params[:action] == "index" %>
                         <li>
-                            <%= link_to "Sign-in", new_user_session_path %>
-                        </li>
-                        <li>
-                            <%= link_to "Sign-up", new_user_registration_path %>
+                            <a class="page-scroll" href="#contact">Contact</a>
                         </li>
                     <% else %>
                         <li>
-                            <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
+                            <%= link_to "Contact", root_path(:anchor => "contact") %>
                         </li>
                     <% end %>
-                    <li>
-                        <a class="page-scroll" href="#contact">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        <% else %>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <%= link_to "About", root_path(:anchor => "about") %>
-                    </li>
-                    <li>
-                        <%= link_to "Services", root_path(:anchor => "services") %>                    </li>
-                    <% if !current_user %>
-                        <li>
-                            <%= link_to "Sign-in", new_user_session_path %>
-                        </li>
-                        <li>
-                            <%= link_to "Sign-up", new_user_registration_path %>
-                        </li>
-                    <% else %>
-                        <li>
-                            <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
-                        </li>
-                    <% end %>
-                    <li>
-                        <%= link_to "Contact", root_path(:anchor => "contact") %>
-                    </li>
-                </ul>
-            </div>
 
-        <% end %>
+                    <% if !current_user %>
+                        <li class="<%= 'active' if (params[:action] == 'new' && params[:controller] == 'devise/sessions') %>">
+                            <%= link_to "Sign-in", new_user_session_path %>
+                        </li>
+                        <li class="<%= 'active' if (params[:action] == 'new' && params[:controller] == 'registrations') %>">
+                            <%= link_to "Sign-up", new_user_registration_path %>
+                        </li>
+                    <% else %>
+                        <li>
+                            <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
+                        </li>
+                    <% end %>
+                                       <li>
+                        <%= link_to "Charts", chart_premium_path, class: "btn, btn-primary"%>
+                    </li>
+                    
+                </ul>
+            </div>
 
         <!-- "controller"=>"welcome", "action"=>"index" -->
         <!-- /.navbar-collapse -->
