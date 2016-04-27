@@ -1,12 +1,76 @@
 <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 
 <div class="container container-devise">
 <h1>Values of <%= Time.now.strftime("%b %d")%></h1>
 	<div class="row">
  		<div class="col-xs-12">
-			<div><%= line_chart @quotes, discrete: true %></div>
-			<div><%= line_chart @hash, discrete: true %></div>
+ 			<%= content_tag :div, "", id: "line_chart", data: {bookings:Chart.last.data}, class: "chart" %>
     </div>
 	</div>
 </div>
+
+
+<script>
+    var monthNames = ["jan.", "fév.", "mar.", "avr.", "mai", "juin",
+      "juil.", "août", "sept.", "oct.", "nov.", "dec."
+    ];
+    var data_string = [{ "time": "2008", "value": "20" },{ "time": "2009", "value": "10" },{ "time": "2010", "value": "5" },{ "time": "2011", "value": "5" },{ "time": "2012", "value": "20" }];
+    // var data_array = JSON.parse(data_string)
+    $(document).ready(function() {
+        barChart();
+
+        // $(window).resize(function() {
+        //     window.m.redraw();
+        // });
+    });
+
+
+
+    function barChart() {
+
+
+
+         Morris.Line({
+      // ID of the element in which to draw the chart.
+      element: 'line_chart',
+      // Chart data records -- each entry in this array corresponds to a point on
+      // the chart.
+      data: $('#line_chart').data('bookings'),
+      // The name of the data record attribute that contains x-values.
+      xkey: 'date',
+      // A list of names of data record attributes that contain y-values.
+      ykeys: ['value'],
+
+      resize: true,
+
+      parseTime: false,
+
+
+      // ymax: 10;
+
+      dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+      // xLabels: 'week',
+
+      xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+      // xLabelFormat: function (x) { return x; },
+
+
+
+
+      // Labels for the ykeys -- will be displayed when you hover over the
+      // chart.
+      labels: ['Value']
+    });
+
+
+
+
+
+}
+</script>
 
