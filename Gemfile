@@ -34,6 +34,8 @@ gem 'stripe'
 
 gem 'gibbon', '~> 2.2'
 
+gem 'jquery-turbolinks'
+
 gem 'rails_12factor', group: :production
 
 # Use ActiveModel has_secure_password
@@ -70,8 +72,6 @@ gem 'google_drive', '~> 1.0', '>= 1.0.6'
 gem 'yahoo-finance'
 
 gem 'devise', '~> 4.0'
-
-gem 'gibbon', '~> 2.2'
 
 gem 'frontend-generators'
 

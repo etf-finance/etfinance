@@ -40,9 +40,13 @@ $(document).ready(function(){
       // Offset for Main Navigation
       $('#mainNav').affix({
           offset: {
-              top: 100
+              top: 20
           }
       })
+
+      // $('#products-link').click(function(){
+      //   $(this).addClass( "hidden" );
+      // })
 
       // Initialize WOW.js Scrolling Animations
       new WOW().init();
