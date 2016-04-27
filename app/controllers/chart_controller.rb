@@ -2,12 +2,25 @@ class ChartController < ApplicationController
 	require "google/api_client"
 	require "google_drive"
 
+  before_action :authenticate_user!
+  # , :except => [:index]
+
   def basic
   	
   end
 
   def premium
-    @future_bookings_count_array = [{date: Time.now, value: 10}, {date: (Time.now - 2.days), value: 20}]
+      charts = Chart.all
+      size = charts.size
+      chart_not_premium = charts[size-5]
+    if !current_user.subscribed
+      @date = Time.now - 4.days
+      data = chart_not_premium.data
+      @future_bookings_count_array = data
+    else
+      @date = Time.now
+      @future_bookings_count_array = Chart.last.data
+    end
 
 
   	# quotes = Quote.all

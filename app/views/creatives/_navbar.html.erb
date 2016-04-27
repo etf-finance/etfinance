@@ -14,7 +14,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="<%= 'active' if params[:action] == 'products' %>">
+                    <li>
                         <%= link_to "Products", welcome_products_path%>
                     </li>
                     <li class="<%= 'active' if params[:action] == 'services' %>">
@@ -31,7 +31,7 @@
                     <% end %>
 
                     <% if !current_user %>
-                        <li>
+                        <li class="<%= 'active' if (params[:action] == 'new' && params[:controller] == 'devise/sessions') %>">
                             <%= link_to "Sign-in", new_user_session_path %>
                         </li>
                         <li class="<%= 'active' if (params[:action] == 'new' && params[:controller] == 'registrations') %>">
@@ -42,6 +42,10 @@
                             <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
                         </li>
                     <% end %>
+                                       <li>
+                        <%= link_to "Charts", chart_premium_path, class: "btn, btn-primary"%>
+                    </li>
+                    
                 </ul>
             </div>
 
