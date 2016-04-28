@@ -3,8 +3,13 @@ class SubscribersController < ApplicationController
 	before_filter :authenticate_user!
 
 	def new
-		@amount = 2000
-		@url = "http://logok.org/wp-content/uploads/2014/03/BMW-logo.png"
+		if !current_user.subscribed
+			@amount = 2000
+			@url = "http://logok.org/wp-content/uploads/2014/03/BMW-logo.png"
+		else
+			flash[:notice] = "You have already subscribed to our live charts."
+			redirect_to chart_premium_path
+		end
 	end
 
 	def create

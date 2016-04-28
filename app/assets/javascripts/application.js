@@ -54,7 +54,7 @@
 
       // ymax: 10;
 
-      dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+      // dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
 
       // xLabels: 'week',
 
