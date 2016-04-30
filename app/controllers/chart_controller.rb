@@ -9,7 +9,39 @@ class ChartController < ApplicationController
   	
   end
 
+  def futures
+    sections_array = []
+    xLabels = []
+
+  end
+
   def premium
+    yahoo_client = YahooFinance::Client.new
+
+    sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG"]
+    xLabels = []
+
+    data = yahoo_client.quotes(sections_array, [:ask, :bid, :last_trade_date, :last_trade_price, :symbol, :name])
+
+    # array.each_with_index {|val, index| puts "#{val} => #{index}" }
+
+    @futures = []
+
+    data.each_with_index do |el|
+      if el.ask.to_f == 0 && el.bid.to_f == 0
+        value = el.last_trade_price.to_f
+      else
+        value = (el.bid.to_f + el.ask.to_f)/2
+      end
+      obj = {symbol: el.symbol, value: value}
+      @futures << obj
+    end
+
+
+
+
+
+
       charts = Chart.all
       size = charts.size
       chart_not_premium = charts[size-5]
@@ -22,18 +54,5 @@ class ChartController < ApplicationController
       @future_bookings_count_array = Chart.last.data
     end
 
-
-  	# quotes = Quote.all
-  	# @quotes = Quote.pluck(:created_at, :value)
-  	# @quotes.each do |el|
-  	# 	el[1] = el[1].to_i
-  	# 	# el[0] = el[0].strftime("%H:%M:%S%z")
-  	# end
-  	# {20.day.ago => 5, 1368174456 => 4, "2013-05-07 00:00:00 UTC" => 7}
-  	# @hash = Hash.new
-  	# quotes.each do |q|
-  	# 	@hash[q.created_at.strftime("%H:%M")] = q.value.to_i
-  	# end
-  	# ap @hash
   end
 end
