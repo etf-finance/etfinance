@@ -36,6 +36,8 @@ gem 'gibbon', '~> 2.2'
 
 gem 'jquery-turbolinks'
 
+gem 'devise_security_extension'
+
 gem 'rails_12factor', group: :production
 
 # Use ActiveModel has_secure_password
