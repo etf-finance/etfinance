@@ -23,18 +23,23 @@ namespace :chart do
   # disable_active_record_logger
       symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
       yahoo_client = YahooFinance::Client.new
-      data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
+      yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
 
-      cc = ChartController.new
 
-      obj = {time: round_off(Time.now, 10.minutes), value: cc.global_perf(data)*rand}
+      # time = round_off(Time.now, 10.minutes)
+
+      # string_time = time.strftime('%l:%M %p')
 
       chart = Chart.last.created_at.day == Time.now.day ? Chart.last : Chart.create
 
-      chart.data << obj
+      element = chart.data.find{|x| x["value"]==nil }
+      element["value"] = ((global_perf(yahoo_data)).round(2))
+      
+
+      # chart.data << obj
       chart.save
       
-      data.each do |el|
+      yahoo_data.each do |el|
         Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f)
       end
 
