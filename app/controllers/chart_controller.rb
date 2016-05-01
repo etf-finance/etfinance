@@ -33,7 +33,7 @@ class ChartController < ApplicationController
       else
         value = (el.bid.to_f + el.ask.to_f)/2
       end
-      obj = {symbol: el.symbol, value: value}
+      obj = {symbol: el.symbol, value: value, date: el.symbol.last(3).capitalize}
       @futures << obj
     end
 
