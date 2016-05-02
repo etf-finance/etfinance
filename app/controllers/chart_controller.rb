@@ -12,7 +12,7 @@ class ChartController < ApplicationController
   def sections
     yahoo_client = YahooFinance::Client.new
 
-    sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG"]# array de test qui pourra être actualisé 
+    sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG", "^VIXSEP", "^VIXOCT", "^VIXNOV"]# array de test qui pourra être actualisé 
 
 
 

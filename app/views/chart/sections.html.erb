@@ -16,14 +16,22 @@
 <script>
 	var array = [];
 
+  date_array = [];
+
   var data = $('#section_chart').data('section');
 
   for (i in data) {
-  	array.push(data[i].value)
+  	array.push(data[i].value);
+    date_array.push(data[i].date);
+
   };
 
   var monthNames = ["jan.", "feb.", "mar.", "apr.", "may", "jun.",
       "jul.", "aug.", "sept.", "oct.", "nov.", "dec."
+    ];
+
+  var futureMonthNames = ["jan", "feb", "mar", "apr", "may", "jun",
+      "jul", "aug", "sep", "oct", "nov", "dec"
     ];
 
 
@@ -54,13 +62,23 @@
 
       parseTime: true,
 
-      xLabelFormat: function (x) { return "^XIV" + monthNames[new Date(x).getMonth()].toUpperCase(); },
+      events: date_array,
+
+      dateFormat: function (x) {
+        var date = new Date(x)
+        if ((date.getDate()) < 21) {
+          var month = date.getMonth()
+        } else {
+          var month = date.getMonth()+1
+        };
+          return "^XIV" + futureMonthNames[month].toUpperCase() + " ("+ new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]+")";
+      },
 
 
       ymin: Math.floor(Math.min(...array)),
       ymax: Math.ceil(Math.max(...array)),
 
-      dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+      xLabelFormat: function (x) { return monthNames[new Date(x).getMonth()]; },
 
       xLabels: 'month',
 
@@ -90,6 +108,8 @@
       resize: true,
 
       parseTime: false,
+
+      events: ['2016-05-05', '2016-02-06', '2016-03-07'],
 
 
       // ymax: 10;
