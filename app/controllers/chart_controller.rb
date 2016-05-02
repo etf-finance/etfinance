@@ -26,14 +26,22 @@ class ChartController < ApplicationController
     # Construction de l'array servant aux graph des futures
     @futures = []
 
+    date = Time.now
+
     data.each_with_index do |el|
       if el.ask.to_f == 0 && el.bid.to_f == 0
         value = el.last_trade_price.to_f
       else
         value = (el.bid.to_f + el.ask.to_f)/2
       end
-      obj = {symbol: el.symbol, value: value, date: el.symbol.last(3).capitalize}
+      obj = {symbol: el.symbol, value: value, date: date}
       @futures << obj
+      dif = 21 - date.day
+      if dif > 0
+        date += dif.days
+      else
+        date += 1.months
+      end
     end
   end
 

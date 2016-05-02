@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   get 'chart/basic'
 
+  get 'chart/sections'
+
   get 'chart/premium'
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users, controllers: { registrations: "registrations" }

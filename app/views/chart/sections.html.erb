@@ -3,20 +3,13 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 
 <div class="container container-devise">
-<h1>Values of <%= @date.strftime("%b %d")%></h1>
-<%= link_to new_subscriber_path, data: { no_turbolink: true } do %>
-  <button class="btn btn-primary">Register</button>
-<% end %>
+
 	<div class="row">
  		<div class="col-xs-12">
  			<%= content_tag :div, "", id: "section_chart", data: {section:@futures}, class: "chart" %>
     </div>
 	</div>
-	<div class="row">
- 		<div class="col-xs-12">
- 			<%= content_tag :div, "", id: "line_chart", data: {section:@future_bookings_count_array}, class: "chart" %>
-    </div>
-	</div> 
+
 </div>
 
 
@@ -29,12 +22,11 @@
   	array.push(data[i].value)
   };
 
-
-	var monthNames = ["jan.", "fév.", "mar.", "avr.", "mai", "juin",
-      "juil.", "août", "sept.", "oct.", "nov.", "dec."
+  var monthNames = ["jan.", "feb.", "mar.", "apr.", "may", "jun.",
+      "jul.", "aug.", "sept.", "oct.", "nov.", "dec."
     ];
-    var data_string = [{ "time": "2008", "value": "20" },{ "time": "2009", "value": "10" },{ "time": "2010", "value": "5" },{ "time": "2011", "value": "5" },{ "time": "2012", "value": "20" }];
-    // var data_array = JSON.parse(data_string)
+
+
     $(document).ready(function() {
         barChart();
 
@@ -60,17 +52,17 @@
 
       resize: true,
 
-      parseTime: false,
+      parseTime: true,
 
-      // xLabelFormat: function (x) { return x.toString() + 'km'; },
+      xLabelFormat: function (x) { return "^XIV" + monthNames[new Date(x).getMonth()].toUpperCase(); },
 
 
       ymin: Math.floor(Math.min(...array)),
       ymax: Math.ceil(Math.max(...array)),
 
-      // dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+      dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
 
-      // xLabels: 'week',
+      xLabels: 'month',
 
       // xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
 
