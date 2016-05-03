@@ -12,14 +12,14 @@ class ChartController < ApplicationController
   def sections
     yahoo_client = YahooFinance::Client.new
 
-    sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG", "^VIXSEP", "^VIXOCT", "^VIXNOV"]# array de test qui pourra être actualisé 
+    @sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG", "^VIXSEP", "^VIXOCT", "^VIXNOV"]# array de test qui pourra être actualisé 
 
 
 
-    data = yahoo_client.quotes(sections_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
+    data = yahoo_client.quotes(@sections_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
 
     
-    # sections_array.each do |el|
+    # @sections_array.each do |el|
     #   Coefficient.create(symbol: el, value: 1+rand)
     # end
 
@@ -48,47 +48,49 @@ class ChartController < ApplicationController
 
 
   def premium
+    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+
+    if market_moment == "opened"
+      @number_of_days = 1
+    else
+      @number_of_days = 2
+    end
+
+
+
+    if market_moment != 'before_closing'
+      @new_coef_class = "before-closing"
+    end
 
     yahoo_client = YahooFinance::Client.new
-
-    sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG"]# array de test qui pourra être actualisé 
-
-
-
-    data = yahoo_client.quotes(sections_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
-
+    yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
     
-    # sections_array.each do |el|
-    #   Coefficient.create(symbol: el, value: 1+rand)
-    # end
+    charts = Chart.all
+    size = charts.size
+    chart_not_premium = charts[size-5]
 
-    # Construction de l'array servant aux graph des futures
-    @futures = []
-
-    data.each_with_index do |el|
-      if el.ask.to_f == 0 && el.bid.to_f == 0
-        value = el.last_trade_price.to_f
-      else
-        value = (el.bid.to_f + el.ask.to_f)/2
-      end
-      obj = {symbol: el.symbol, value: value, date: el.symbol.last(3).capitalize}
-      @futures << obj
-    end
-    
-      charts = Chart.all
-      size = charts.size
-      chart_not_premium = charts[size-5]
     if !current_user.subscribed
       @date = Time.now - 4.days
       data = chart_not_premium.data
-      @future_bookings_count_array = data
+      @chart_data = data
     else
       @date = Time.now
-      @future_bookings_count_array = Chart.last.data
+      @chart_data= Chart.last.data
     end
   end
 
-  # private
+  private
+
+
+  def market_moment
+    if Time.now.hour > 5 && (Time.now.hour < 16 || (Time.now.hour == 15 && Time.now.min < 55))
+      return "opened"
+    elsif (Time.now.hour == 15 && Time.now.min > 54)
+      return "before_closing"
+    else
+      return "close"
+    end
+  end
 
   def global_perf(array)
     perf = 0
@@ -110,6 +112,9 @@ class ChartController < ApplicationController
   def coef(x)
     Coefficient.where(symbol: x.symbol).last.value
   end
+
+
+
 
 
 

@@ -9,9 +9,42 @@
 <% end %>
 	<div class="row">
  		<div class="col-xs-12">
- 			<%= content_tag :div, "", id: "line_chart", data: {section:@future_bookings_count_array}, class: "chart" %>
+ 			<%= content_tag :div, "", id: "line_chart", data: {section:@chart_data}, class: "chart" %>
     </div>
 	</div>
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Coefficient</th>
+        <th>Number of shares</th>
+        <th>Coefficient</th>
+        <th>Number of shares</th>
+        <th>Delta</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @symbols_array.each do |symbol| %>
+      <% coef = Coefficient.where(symbol: symbol).last(@number_of_days).first.value %>
+      <% tomorrow_coef = Coefficient.where(symbol: symbol).last.value %>
+      <% previous_close = Quote.where(symbol: symbol).last.close%>
+      <% nbr_shares_today = ((coef/previous_close)*10000) %>
+      <% nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) %>
+      <% delta = nbr_shares_tomorrow -  nbr_shares_today %>
+        <td><%= symbol %></td>
+        <td><%= coef.round(2)%></td>
+        <td><%= nbr_shares_today%></td>
+        <td><%= tomorrow_coef.round(2)%></td>
+        <td class= "<%= @new_coef_class %>"><%= nbr_shares_tomorrow%></td>
+        <% if delta == 0 %>
+          <td> - </td>
+        <% else %>
+          <td class = "<%= delta > 0 ? 'success' : 'danger' %>"><%= delta %></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 </div>
 
 
