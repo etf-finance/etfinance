@@ -50,6 +50,13 @@ class ChartController < ApplicationController
   def premium
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
+    @today_coefficients = []
+    @tomorrow_coefficients = []
+
+    # @symbols_array.each do |symbol|
+    #   Coefficient.where(symbol: symbol).last
+    #   Coefficient.where('symbol = ? AND created_at < ?', "ZIV", Time.now-10.hours)
+
     if market_moment == "opened"
       @number_of_days = 1
     else

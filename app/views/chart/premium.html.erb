@@ -33,9 +33,9 @@
       <% delta = nbr_shares_tomorrow -  nbr_shares_today %>
         <td><%= symbol %></td>
         <td><%= coef.round(2)%></td>
-        <td><%= nbr_shares_today%></td>
+        <td><%= nbr_shares_today.round%></td>
         <td><%= tomorrow_coef.round(2)%></td>
-        <td class= "<%= @new_coef_class %>"><%= nbr_shares_tomorrow%></td>
+        <td class= "<%= @new_coef_class %>"><%= nbr_shares_tomorrow.round%></td>
         <% if delta == 0 %>
           <td> - </td>
         <% else %>
