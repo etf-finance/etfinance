@@ -63,7 +63,7 @@ p {
 }
 
 .text-faded {
-    color: rgba(255,255,255,.7);
+    color: $text-faded-color;
     li {
         text-align: left;
         margin-left: 50px;
@@ -119,7 +119,7 @@ aside {
 
 .navbar-default .nav > li.active>a,
 .navbar-default .nav>li.active>a:focus {
-    color: $primary-color!important;
+    color: $primary-color-dark!important;
     background-color: transparent;
 }
 
@@ -135,27 +135,27 @@ aside {
     }
 
     .navbar-default .navbar-header .navbar-brand {
-        color: rgba(255,255,255,.7);
+        color: $navbar-title-color;
     }
 
     .navbar-default .navbar-header .navbar-brand:hover,
     .navbar-default .navbar-header .navbar-brand:focus {
-        color: #fff;
+        color: $white-color;
     }
 
     .navbar-default .nav > li>a,
     .navbar-default .nav>li>a:focus {
-        color: rgba(255,255,255,.7);
+        color: $navbar-title-color;
     }
 
     .navbar-default .nav > li>a:hover,
     .navbar-default .nav>li>a:focus:hover {
-        color: #fff;
+        color: $white-color;
     }
 
     .navbar-default.affix {
         border-color: rgba(34,34,34,.05);
-        background-color: #fff;
+        background-color: $navbar-affix-color;
     }
 
     .navbar-default.affix .navbar-header .navbar-brand {
@@ -184,7 +184,7 @@ header {
     width: 100%;
     min-height: auto;
     text-align: center;
-    color: #fff;
+    color: $white-color;
     background-position: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -226,7 +226,7 @@ header .header-content .header-content-inner p {
     margin-bottom: 50px;
     font-size: 16px;
     font-weight: 300;
-    color: rgba(255,255,255,.7);
+    color: $navbar-title-color;
 }
 
 @media(min-width:768px) {
@@ -299,7 +299,7 @@ header .header-content .header-content-inner p {
     width: 100%;
     height: 100%;
     text-align: center;
-    color: #fff;
+    color: $portfolio-caption;
     opacity: 0;
     background: rgba($primary-color, .9);
     -webkit-transition: all .35s;
@@ -361,7 +361,7 @@ header .header-content .header-content-inner p {
 .btn-default {
     border-color: #fff;
     color: #222;
-    background-color: #fff;
+    background-color: $navbar-affix-color;
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s;
