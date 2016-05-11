@@ -3,16 +3,17 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 
 <div class="container container-devise">
-<h1>Values of <%= @date.strftime("%b %d")%></h1>
-<%= link_to new_subscriber_path, data: { no_turbolink: true } do %>
-  <button class="btn btn-primary">Register</button>
-<% end %>
+  <h1>Values of <%= @date.strftime("%b %d")%></h1>
+  <%= link_to new_subscriber_path, data: { no_turbolink: true } do %>
+    <button class="btn btn-primary">Register</button>
+  <% end %>
 	<div class="row">
  		<div class="col-xs-12">
  			<%= content_tag :div, "", id: "line_chart", data: {section:@chart_data}, class: "chart" %>
     </div>
 	</div>
-    <table class="table table-striped">
+  <br>
+  <table class="table table-striped">
     <thead>
       <tr>
         <th>Symbol</th>
@@ -25,21 +26,25 @@
     </thead>
     <tbody>
     <% @symbols_array.each do |symbol| %>
-      <% coef = Coefficient.where(symbol: symbol).last(@number_of_days).first.value %>
+    <!-- LES VARIABLES DE CHAQUE LIGNE -->
+      <% today_coef = Coefficient.where(symbol: symbol).where(expired: false).last.value %>
       <% tomorrow_coef = Coefficient.where(symbol: symbol).last.value %>
       <% previous_close = Quote.where(symbol: symbol).last.close%>
-      <% nbr_shares_today = ((coef/previous_close)*10000) %>
+      <% nbr_shares_today = ((today_coef/previous_close)*10000) %>
       <% nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) %>
       <% delta = nbr_shares_tomorrow -  nbr_shares_today %>
+    <!-- LES VARIABLES DE CHAQUE LIGNE -->
+
+
         <td><%= symbol %></td>
-        <td><%= coef.round(2)%></td>
+        <td><%= today_coef.round(2)%></td>
         <td><%= nbr_shares_today.round%></td>
         <td><%= tomorrow_coef.round(2)%></td>
         <td class= "<%= @new_coef_class %>"><%= nbr_shares_tomorrow.round%></td>
         <% if delta == 0 %>
           <td> - </td>
         <% else %>
-          <td class = "<%= delta > 0 ? 'success' : 'danger' %>"><%= delta %></td>
+          <td class = "<%= delta > 0 ? 'success' : 'danger' %>"><%= delta.round(2) %></td>
         <% end %>
       </tr>
     <% end %>

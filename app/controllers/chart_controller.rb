@@ -57,11 +57,11 @@ class ChartController < ApplicationController
     #   Coefficient.where(symbol: symbol).last
     #   Coefficient.where('symbol = ? AND created_at < ?', "ZIV", Time.now-10.hours)
 
-    if market_moment == "opened"
-      @number_of_days = 1
-    else
-      @number_of_days = 2
-    end
+    # if market_moment == "opened"
+    #   @number_of_days = 1
+    # else
+    #   @number_of_days = 2
+    # end
 
 
 
