@@ -77,14 +77,16 @@ class ChartController < ApplicationController
     chart_not_premium = charts[size-5]
 
     if !current_user.subscribed
-      @date = Time.now - 4.days
-      data = chart_not_premium.data
-      @chart_data = data
+      redirect_to new_subscriber_path
+      # @date = Time.now - 4.days
+      # data = chart_not_premium.data
+      # @chart_data = data
     else
       @date = Time.now
       @chart_data= Chart.last.data
     end
   end
+
 
   private
 

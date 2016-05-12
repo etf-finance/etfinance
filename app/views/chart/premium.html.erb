@@ -27,7 +27,7 @@
     <tbody>
     <% @symbols_array.each do |symbol| %>
     <!-- LES VARIABLES DE CHAQUE LIGNE -->
-      <% today_coef = Coefficient.where(symbol: symbol).where(expired: false).last.value %>
+      <% today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value %>
       <% tomorrow_coef = Coefficient.where(symbol: symbol).last.value %>
       <% previous_close = Quote.where(symbol: symbol).last.close%>
       <% nbr_shares_today = ((today_coef/previous_close)*10000) %>
@@ -96,8 +96,8 @@
 
       fillOpacity: 0.2,
 
-      ymin: Math.floor(Math.min(...array)),
-      ymax: Math.ceil(Math.max(...array)),
+      ymin: Math.floor(Math.min(...array))-1,
+      ymax: Math.ceil(Math.max(...array))+1,
       // xLabels: "week",
 
       // LabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },

@@ -26,11 +26,11 @@ namespace :chart do
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
 
 
-      # time = round_off(Time.now, 10.minutes)
-
-      # string_time = time.strftime('%l:%M %p')
-
-      chart = Chart.last.created_at.day == Time.now.day ? Chart.last : Chart.create
+      if Chart.last.present?
+        chart = (Chart.last.created_at.day == Time.now.day) ? Chart.last : Chart.create
+      else
+        chart = Chart.create
+      end
 
       element = chart.data.find{|x| x["value"]==nil }
       element["value"] = ((global_perf(yahoo_data)).round(2))
@@ -40,10 +40,25 @@ namespace :chart do
       chart.save
       
       yahoo_data.each do |el|
-        Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close)
+        Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f)
       end
 
       puts "Done."
+  end
+
+
+
+  desc "makes tomorrow_coef expired"
+  task expired_coefficients: :environment do
+  # disable_active_record_logger
+  coefs = Coefficient.where(expired: false)
+  coefs.each do |c|
+    c.expired = true
+    c.save
+  end
+
+  puts "Done."
+
   end
 
 

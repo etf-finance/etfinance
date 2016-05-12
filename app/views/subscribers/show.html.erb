@@ -1,0 +1,36 @@
+<header class="main-header" id="products-header">
+  <div id="pricing-table">
+    <div class="pricing">
+      <div class="row">
+
+
+         <div class="col-md-4 col-md-offset-4">
+          <div class="pricing-table">
+            <div class="pricing-header">
+              <p class="pricing-title">Your subscription details</p>
+            </div>
+
+            <div class="pricing-list">
+              <ul>
+                <li><i class="fa fa-envelope"></i><%= Time.at(@sub.current_period_start).strftime("%b %d, %Y")%></li>
+                <li><i class="fa fa-signal"></i><%= Time.at(@sub.current_period_end).strftime("%b %d, %Y")%></li>
+                <li><i class="fa <%= "fa-#{@sub.plan.currency}"%>"></i><%= @sub.plan.amount/100%></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row">
+      	<div class="col-md-4 col-md-offset-4">
+      		<%= link_to "Explore our live charts", chart_premium_path, class: "btn btn-success btn-xl", data: { no_turbolink: true } %>
+      	</div>
+      </div>
+    </div>
+  </div>  
+
+          <!-- /PRICE ITEM -->
+
+</header>
+

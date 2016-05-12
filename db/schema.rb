@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160511100535) do
+ActiveRecord::Schema.define(version: 20160511120250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,14 +30,21 @@ ActiveRecord::Schema.define(version: 20160511100535) do
     t.boolean  "expired",    default: false
   end
 
-  create_table "quotes", force: :cascade do |t|
-    t.float    "value"
+  create_table "graphs", force: :cascade do |t|
+    t.string   "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "quotes", force: :cascade do |t|
+    t.float    "value"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.float    "bid"
     t.float    "ask"
     t.float    "close"
     t.string   "symbol"
+    t.float    "previous_close"
   end
 
   create_table "users", force: :cascade do |t|
@@ -58,6 +65,7 @@ ActiveRecord::Schema.define(version: 20160511100535) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "unique_session_id",      limit: 20
+    t.boolean  "admin"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
