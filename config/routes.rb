@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
+
   get 'chart/basic'
 
   get 'chart/sections'
 
   get 'chart/premium'
+
+  get 'chart/new_coef'
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users, controllers: { registrations: "registrations" }
   get 'welcome/index'
@@ -32,6 +36,10 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   resources :subscribers
+
+  resources :coefficients,:except => [:index, :edit, :update, :show]
+
+  # get "coefficients/index", to: "coefficients#index", as: :coef_index
 
   # get 'subscribers/payment_success'
 

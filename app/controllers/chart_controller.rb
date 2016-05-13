@@ -103,13 +103,18 @@ class ChartController < ApplicationController
   end
 
 
+  def new_coef
+    
+  end
+
+
   private
 
 
   def market_moment
     opening_hour = 5
-    closing_hour = 12
-    if Time.now.hour > opening_hour && Time.now.hour < closing_hour && (Time.now.hour == closing_hour-1 && Time.now.min < 33)
+    closing_hour = 13
+    if Time.now.hour > opening_hour && Time.now.hour < closing_hour && (Time.now.hour == closing_hour-1 && Time.now.min < 50)
       return "open"
     elsif (Time.now.hour == 15 && Time.now.min > 54)
       return "before_closing"
