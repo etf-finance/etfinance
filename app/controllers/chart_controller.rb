@@ -91,7 +91,9 @@ class ChartController < ApplicationController
     size = charts.size
     chart_not_premium = charts[size-5]
 
-    if !current_user.subscribed
+    customer = Stripe::Customer.retrieve(current_user.stripe_id)
+
+    if customer.subscriptions.data.blank? || !current_user.subscribed
       redirect_to new_subscriber_path
       # @date = Time.now - 4.days
       # data = chart_not_premium.data

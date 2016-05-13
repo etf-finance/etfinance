@@ -14,7 +14,7 @@ class WelcomeController < ApplicationController
     else
       gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
       gibbon.lists(ENV['MAILCHIMP_LIST_ID']).members.create(body: {email_address: params[:email], status: "subscribed", merge_fields: {FNAME: "", LNAME: ""}})
-      flash[:success]= 'Votre inscription à la newsletter ETF FINANCE est validée.'
+      flash[:success]= 'You have successfully subscribed to ETF FINANCE weekly newsletter.'
     end
 
     redirect_to root_path

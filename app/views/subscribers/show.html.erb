@@ -12,8 +12,8 @@
 
             <div class="pricing-list">
               <ul>
-                <li><i class="fa fa-envelope"></i><%= Time.at(@sub.current_period_start).strftime("%b %d, %Y")%></li>
-                <li><i class="fa fa-signal"></i><%= Time.at(@sub.current_period_end).strftime("%b %d, %Y")%></li>
+                <li><i class="fa fa-calendar-check-o "></i>From <%= Time.at(@sub.current_period_start).strftime("%b %d, %Y")%></li>
+                <li><i class="fa fa-calendar-times-o "></i>To <%= Time.at(@sub.current_period_end).strftime("%b %d, %Y")%></li>
                 <li><i class="fa <%= "fa-#{@sub.plan.currency}"%>"></i><%= @sub.plan.amount/100%></li>
               </ul>
             </div>

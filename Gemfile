@@ -30,7 +30,7 @@ gem "figaro"
 gem "chartkick"
 gem 'groupdate'
 
-gem 'stripe'
+gem 'stripe', '~> 1.41'
 
 gem 'gibbon', '~> 2.2'
 
