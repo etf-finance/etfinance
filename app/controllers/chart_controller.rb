@@ -50,24 +50,39 @@ class ChartController < ApplicationController
   def premium
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
-    @today_coefficients = []
-    @tomorrow_coefficients = []
+    @table_array = []
 
-    # @symbols_array.each do |symbol|
-    #   Coefficient.where(symbol: symbol).last
-    #   Coefficient.where('symbol = ? AND created_at < ?', "ZIV", Time.now-10.hours)
+    @symbols_array.each do |symbol|
+      today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value 
+      if market_moment == "open"
+        @new_coef_class = "expired"
+        tomorrow_coef = today_coef
+      else
+        @new_coef_class = "recent"
+        tomorrow_coef = Coefficient.where(symbol: symbol).last.value
+      end
+      previous_close = Quote.where(symbol: symbol).last.close
+      nbr_shares_today = ((today_coef/previous_close)*10000) 
+      nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) 
+      delta = nbr_shares_tomorrow -  nbr_shares_today
 
-    # if market_moment == "opened"
-    #   @number_of_days = 1
-    # else
-    #   @number_of_days = 2
-    # end
-
-
-
-    if market_moment != 'before_closing'
-      @new_coef_class = "before-closing"
+      obj = {
+        symbol: symbol,
+        today_coef: today_coef,
+        tomorrow_coef: tomorrow_coef, 
+        previous_close: previous_close,
+        nbr_shares_today: nbr_shares_today, 
+        nbr_shares_tomorrow: nbr_shares_tomorrow, 
+        delta: delta 
+      }
+      @table_array << obj
     end
+
+
+
+    # if market_moment != 'before_closing'
+    #   @new_coef_class = "before-closing"
+    # end
 
     yahoo_client = YahooFinance::Client.new
     yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
@@ -92,8 +107,10 @@ class ChartController < ApplicationController
 
 
   def market_moment
-    if Time.now.hour > 5 && (Time.now.hour < 16 || (Time.now.hour == 15 && Time.now.min < 55))
-      return "opened"
+    opening_hour = 5
+    closing_hour = 12
+    if Time.now.hour > opening_hour && Time.now.hour < closing_hour && (Time.now.hour == closing_hour-1 && Time.now.min < 33)
+      return "open"
     elsif (Time.now.hour == 15 && Time.now.min > 54)
       return "before_closing"
     else

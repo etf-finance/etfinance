@@ -576,9 +576,13 @@ body {
     text-align: left;
 }
 
-.before-closing {
+.recent {
     color: green;
     font-weight: bold;
+}
+
+.expired {
+    color: grey;
 }
 
 .card {

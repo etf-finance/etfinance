@@ -25,26 +25,17 @@
       </tr>
     </thead>
     <tbody>
-    <% @symbols_array.each do |symbol| %>
-    <!-- LES VARIABLES DE CHAQUE LIGNE -->
-      <% today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value %>
-      <% tomorrow_coef = Coefficient.where(symbol: symbol).last.value %>
-      <% previous_close = Quote.where(symbol: symbol).last.close%>
-      <% nbr_shares_today = ((today_coef/previous_close)*10000) %>
-      <% nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) %>
-      <% delta = nbr_shares_tomorrow -  nbr_shares_today %>
-    <!-- LES VARIABLES DE CHAQUE LIGNE -->
+    <% @table_array.each do |row| %>
 
-
-        <td><%= symbol %></td>
-        <td><%= today_coef.round(2)%></td>
-        <td><%= nbr_shares_today.round%></td>
-        <td><%= tomorrow_coef.round(2)%></td>
-        <td class= "<%= @new_coef_class %>"><%= nbr_shares_tomorrow.round%></td>
-        <% if delta == 0 %>
+        <td><%= row[:symbol] %></td>
+        <td><%= row[:today_coef].round(2)%></td>
+        <td><%= row[:nbr_shares_today].round%></td>
+        <td class= "<%= @new_coef_class %>"><%= row[:tomorrow_coef].round(2)%></td>
+        <td class= "<%= @new_coef_class %>"><%= row[:nbr_shares_tomorrow].round%></td>
+        <% if row[:delta] == 0 %>
           <td> - </td>
         <% else %>
-          <td class = "<%= delta > 0 ? 'success' : 'danger' %>"><%= delta.round(2) %></td>
+          <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta].round(2) %></td>
         <% end %>
       </tr>
     <% end %>
@@ -123,15 +114,25 @@
       // chart.
       labels: ['Value']
     });
+  }
 
+  function refreshAt(hours, minutes, seconds) {
+    var now = new Date();
+    var then = new Date();
 
+    if(now.getHours() > hours ||
+       (now.getHours() == hours && now.getMinutes() > minutes) ||
+        now.getHours() == hours && now.getMinutes() == minutes && now.getSeconds() >= seconds) {
+        then.setDate(now.getDate() + 1);
+    }
+    then.setHours(hours);
+    then.setMinutes(minutes);
+    then.setSeconds(seconds);
 
-
-
-
-
-
-}
+    var timeout = (then.getTime() - now.getTime());
+    setTimeout(function() { window.location.reload(true); }, timeout);
+  }
+  refreshAt(11,33,0);
 </script>
 
 
