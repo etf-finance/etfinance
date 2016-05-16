@@ -91,4 +91,6 @@ gem 'rails_admin'
 
 gem 'autoprefixer-rails'
 
+gem 'faker', '~> 1.6', '>= 1.6.1'
+
 ruby "2.1.5"
