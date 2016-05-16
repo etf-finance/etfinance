@@ -48,59 +48,64 @@ class ChartController < ApplicationController
 
 
   def premium
-    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
-    @table_array = []
+    if current_user && current_user.admin
+      @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
-    @symbols_array.each do |symbol|
-      today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value 
-      if market_moment == "open"
-        @new_coef_class = "expired"
-        tomorrow_coef = today_coef
-      else
-        @new_coef_class = "recent"
-        tomorrow_coef = Coefficient.where(symbol: symbol).last.value
+      @table_array = []
+
+      @symbols_array.each do |symbol|
+        today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value 
+        if market_moment == "open"
+          @new_coef_class = "expired"
+          tomorrow_coef = today_coef
+        else
+          @new_coef_class = "recent"
+          tomorrow_coef = Coefficient.where(symbol: symbol).last.value
+        end
+        previous_close = Quote.where(symbol: symbol).last.close
+        nbr_shares_today = ((today_coef/previous_close)*10000) 
+        nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) 
+        delta = nbr_shares_tomorrow -  nbr_shares_today
+
+        obj = {
+          symbol: symbol,
+          today_coef: today_coef,
+          tomorrow_coef: tomorrow_coef, 
+          previous_close: previous_close,
+          nbr_shares_today: nbr_shares_today, 
+          nbr_shares_tomorrow: nbr_shares_tomorrow, 
+          delta: delta 
+        }
+        @table_array << obj
       end
-      previous_close = Quote.where(symbol: symbol).last.close
-      nbr_shares_today = ((today_coef/previous_close)*10000) 
-      nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) 
-      delta = nbr_shares_tomorrow -  nbr_shares_today
-
-      obj = {
-        symbol: symbol,
-        today_coef: today_coef,
-        tomorrow_coef: tomorrow_coef, 
-        previous_close: previous_close,
-        nbr_shares_today: nbr_shares_today, 
-        nbr_shares_tomorrow: nbr_shares_tomorrow, 
-        delta: delta 
-      }
-      @table_array << obj
-    end
 
 
 
-    # if market_moment != 'before_closing'
-    #   @new_coef_class = "before-closing"
-    # end
+      # if market_moment != 'before_closing'
+      #   @new_coef_class = "before-closing"
+      # end
 
-    yahoo_client = YahooFinance::Client.new
-    yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
-    
-    charts = Chart.all
-    size = charts.size
-    chart_not_premium = charts[size-5]
+      yahoo_client = YahooFinance::Client.new
+      yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
+      
+      charts = Chart.all
+      size = charts.size
+      chart_not_premium = charts[size-5]
 
-    customer = Stripe::Customer.retrieve(current_user.stripe_id)
+      customer = Stripe::Customer.retrieve(current_user.stripe_id)
 
-    if customer.subscriptions.data.blank? || !current_user.subscribed
-      redirect_to new_subscriber_path
-      # @date = Time.now - 4.days
-      # data = chart_not_premium.data
-      # @chart_data = data
+      if customer.subscriptions.data.blank? || !current_user.subscribed
+        redirect_to new_subscriber_path
+        # @date = Time.now - 4.days
+        # data = chart_not_premium.data
+        # @chart_data = data
+      else
+        @date = Time.now
+        @chart_data= Chart.last.data
+      end
     else
-      @date = Time.now
-      @chart_data= Chart.last.data
+      redirect_to root_path
     end
   end
 
