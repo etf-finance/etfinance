@@ -30,11 +30,13 @@ gem "figaro"
 gem "chartkick"
 gem 'groupdate'
 
-gem 'stripe'
+gem 'stripe', '~> 1.41'
 
 gem 'gibbon', '~> 2.2'
 
 gem 'jquery-turbolinks'
+
+gem 'devise_security_extension'
 
 gem 'rails_12factor', group: :production
 
@@ -88,5 +90,7 @@ gem 'appsignal'
 gem 'rails_admin'
 
 gem 'autoprefixer-rails'
+
+gem 'faker', '~> 1.6', '>= 1.6.1'
 
 ruby "2.1.5"

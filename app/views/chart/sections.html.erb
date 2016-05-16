@@ -1,0 +1,165 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
+<div class="container-devise">
+  <div class="container">
+  <h2>Futures</h2>
+    <div class="row">
+      <div class="col-xs-12 yahoo-chart perf-graph">
+        <%= content_tag :div, "", id: "section_chart", data: {section:@futures}, class: "chart" %>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2>Live quotations</h2>
+    <div class="row perf-graph">
+      <% @sections_array.each do |quote| %>
+        <div class="col-sm-3 col-xs-6 yahoo-chart">
+          <%= image_tag("http://chart.finance.yahoo.com/z?s=#{quote}&t=1d", :alt => "rss feed") %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+
+	
+
+
+
+
+
+
+</div>
+
+
+<script>
+	var array = [];
+
+  date_array = [];
+
+  var data = $('#section_chart').data('section');
+
+  for (i in data) {
+  	array.push(data[i].value);
+    date_array.push(data[i].date);
+
+  };
+
+  var monthNames = ["jan.", "feb.", "mar.", "apr.", "may", "jun.",
+      "jul.", "aug.", "sept.", "oct.", "nov.", "dec."
+    ];
+
+  var futureMonthNames = ["jan", "feb", "mar", "apr", "may", "jun",
+      "jul", "aug", "sep", "oct", "nov", "dec"
+    ];
+
+
+    $(document).ready(function() {
+        barChart();
+
+        // $(window).resize(function() {
+        //     window.m.redraw();
+        // });
+    });
+
+
+
+    function barChart() {
+
+    	Morris.Line({
+      // ID of the element in which to draw the chart.
+      element: 'section_chart',
+      // Chart data records -- each entry in this array corresponds to a point on
+      // the chart.
+      data: data,
+      // The name of the data record attribute that contains x-values.
+      xkey: 'date',
+      // A list of names of data record attributes that contain y-values.
+      ykeys: ['value'],
+
+      resize: true,
+
+      parseTime: true,
+
+      events: date_array,
+
+      dateFormat: function (x) {
+        var date = new Date(x)
+        if ((date.getDate()) < 21) {
+          var month = date.getMonth()
+        } else {
+          var month = date.getMonth()+1
+        };
+          return "^XIV" + futureMonthNames[month].toUpperCase() + " ("+ new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]+")";
+      },
+
+
+      ymin: Math.floor(Math.min(...array)),
+      ymax: Math.ceil(Math.max(...array)),
+
+      xLabelFormat: function (x) { return monthNames[new Date(x).getMonth()]; },
+
+      xLabels: 'month',
+
+      // xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+
+
+      // Labels for the ykeys -- will be displayed when you hover over the
+      // chart.
+      labels: ['Value']
+    });
+
+
+
+
+    	Morris.Line({
+      // ID of the element in which to draw the chart.
+      element: 'line_chart',
+      // Chart data records -- each entry in this array corresponds to a point on
+      // the chart.
+      data: $('#line_chart').data('section'),
+      // The name of the data record attribute that contains x-values.
+      xkey: 'date',
+      // A list of names of data record attributes that contain y-values.
+      ykeys: ['value'],
+
+      resize: true,
+
+      parseTime: false,
+
+      events: ['2016-05-05', '2016-02-06', '2016-03-07'],
+
+
+      // ymax: 10;
+
+      // dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+      // xLabels: 'week',
+
+      xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+      // xLabelFormat: function (x) { return x; },
+
+
+
+
+      // Labels for the ykeys -- will be displayed when you hover over the
+      // chart.
+      labels: ['Value']
+    });
+
+
+
+
+
+
+
+
+}
+</script>
+
+
+

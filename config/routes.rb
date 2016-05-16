@@ -1,14 +1,20 @@
 Rails.application.routes.draw do
+
   get 'chart/basic'
 
+  get 'chart/sections'
+
   get 'chart/premium'
+
+  get 'chart/new_coef'
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users, controllers: { registrations: "registrations" }
   get 'welcome/index'
 
   get 'welcome/services'
 
-   get 'welcome/products'
+  get 'welcome/products'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -29,7 +35,13 @@ Rails.application.routes.draw do
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
-    resources :subscribers
+  resources :subscribers
+
+  resources :coefficients,:except => [:index, :edit, :update, :show]
+
+  # get "coefficients/index", to: "coefficients#index", as: :coef_index
+
+  # get 'subscribers/payment_success'
 
   # Example resource route with options:
   #   resources :products do
