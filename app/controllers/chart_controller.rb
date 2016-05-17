@@ -98,7 +98,7 @@ class ChartController < ApplicationController
         previous_close: previous_close,
         nbr_shares_today: nbr_shares_today, 
         nbr_shares_tomorrow: nbr_shares_tomorrow, 
-        delta: delta 
+        delta: delta.round.to_i
       }
       @table_array << obj
     end
@@ -156,7 +156,7 @@ class ChartController < ApplicationController
         previous_close: previous_close,
         nbr_shares_today: nbr_shares_today, 
         nbr_shares_tomorrow: nbr_shares_tomorrow, 
-        delta: delta 
+        delta: delta.round.to_i
       }
       @table_array << obj
     end

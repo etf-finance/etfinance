@@ -52,7 +52,7 @@
           <% if row[:delta] == 0 %>
             <td> - </td>
           <% else %>
-            <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta].round(2) %></td>
+            <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta] %></td>
           <% end %>
         </tr>
       <% end %>
