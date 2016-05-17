@@ -6,15 +6,13 @@ class SubscribersController < ApplicationController
 
 		@plans = Stripe::Plan.list.data.sort_by { |plan| plan['id'].to_i }
 
-		customer = Stripe::Customer.retrieve(current_user.stripe_id)
+		@url = "http://logok.org/wp-content/uploads/2014/03/BMW-logo.png"
 
-		if customer.subscriptions.data.blank? || !current_user.subscribed
-			@amount = 3000
-			@url = "http://logok.org/wp-content/uploads/2014/03/BMW-logo.png"
-		else
+		if current_user.subscribed && current_user.stripe_id.present? && Stripe::Customer.retrieve(current_user.stripe_id).subscriptions.data.present?
 			flash[:notice] = "You have already subscribed to our live charts."
 			redirect_to chart_premium_path
 		end
+
 	end
 
 	def create

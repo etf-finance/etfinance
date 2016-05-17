@@ -47,6 +47,20 @@ namespace :chart do
   end
 
 
+  desc "makes tomorrow_coef expired"
+  task create_coefficients: :environment do
+  # disable_active_record_logger
+  symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+  symbols_array.each do |symbol|
+    c = Coefficient.create(symbol: symbol, value: (1+rand).round(1), expired: true)
+    Coefficient.create(symbol: symbol, value: (c.value+0.1+rand).round(1), expired: false)
+  end
+
+  puts "Done."
+
+  end
+
+
 
 
   def global_perf(array)

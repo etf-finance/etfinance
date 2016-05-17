@@ -104,16 +104,21 @@ class ChartController < ApplicationController
     size = charts.size
     chart_not_premium = charts[size-5]
 
-    customer = Stripe::Customer.retrieve(current_user.stripe_id)
-
-    if customer.subscriptions.data.blank? || !current_user.subscribed
+    
+    if current_user.stripe_id.nil?
       redirect_to new_subscriber_path
-      # @date = Time.now - 4.days
-      # data = chart_not_premium.data
-      # @chart_data = data
     else
-      @date = Time.now
-      @chart_data= Chart.last.data
+      customer = Stripe::Customer.retrieve(current_user.stripe_id)
+
+      if customer.subscriptions.data.blank? || !current_user.subscribed
+        redirect_to new_subscriber_path
+        # @date = Time.now - 4.days
+        # data = chart_not_premium.data
+        # @chart_data = data
+      else
+        @date = Time.now
+        @chart_data= Chart.last.data
+      end
     end
   end
 
@@ -167,7 +172,7 @@ class ChartController < ApplicationController
   end
 
   def os_to_db(object)
-    quote = Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f)
+    quote = Quote.create(symbol: object.symbol, bid: object.bid.to_f, ask: object.ask.to_f, close: object.close.to_f, previous_close: object.previous_close.to_f)
     return quote
   end
 
