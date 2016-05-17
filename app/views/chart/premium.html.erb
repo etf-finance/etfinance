@@ -8,6 +8,7 @@
     <div class="row">
       <div class="col-xs-12">
         <h2><%= current_user.first_name%>'s values of <%= @date.strftime("%b %d, %Y")%></h2>
+        
       </div>
     </div>
     
@@ -27,7 +28,7 @@
     <table class="table table-striped perf-graph">
       <thead>
       <tr>
-        <th></th>
+        <th><%= @market_moment%></th>
         <th>TODAY</th>
         <th></th>
         <th>TOMORROW</th>
@@ -64,6 +65,7 @@
 
 
 <script>
+
 	var array = [];
 
   var data = $('#line_chart').data('section');
@@ -157,7 +159,11 @@
     var timeout = (then.getTime() - now.getTime());
     setTimeout(function() { window.location.reload(true); }, timeout);
   }
-  refreshAt(12,50,0);
+
+  var hour = <%= @refreshing_time.hour%>;
+  var minutes = <%= @refreshing_time.min%>;
+  // var hour = time.getHours();
+  refreshAt(hour,minutes,0);
 </script>
 
 

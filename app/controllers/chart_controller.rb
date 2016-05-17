@@ -1,6 +1,11 @@
 class ChartController < ApplicationController
-	require "google/api_client"
-	require "google_drive"
+	# require "google/api_client"
+	# require "google_drive"
+
+  @@opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 14, 30, 0)
+
+  @@closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 21, 00, 0)
+
 
   before_action :authenticate_user!
   # , :except => [:index]
@@ -52,6 +57,10 @@ class ChartController < ApplicationController
 
   def premium
 
+    @refreshing_time = @@closing_time.localtime - 5.minutes
+
+    @market_moment = market_moment(@@opening_time, @@closing_time)
+
     @perf_class = "active"
     @futures_class = "inactive"
 
@@ -65,7 +74,7 @@ class ChartController < ApplicationController
 
     @symbols_array.each do |symbol|
       today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value 
-      if market_moment == "open"
+      if @market_moment == "open"
         @new_coef_class = "expired"
         tomorrow_coef = today_coef
       else
@@ -137,12 +146,22 @@ class ChartController < ApplicationController
   private
 
 
-  def market_moment
-    opening_hour = 5
-    closing_hour = 13
-    if Time.now.hour > opening_hour && Time.now.hour < closing_hour && (Time.now.hour == closing_hour-1 && Time.now.min < 50)
+  # def market_moment
+  #   opening_hour = 5
+  #   closing_hour = 15
+  #   if Time.now.hour > opening_hour && Time.now.hour <= closing_hour-1 || (Time.now.hour == closing_hour-1 && Time.now.min > 40)
+  #     return "open"
+  #   elsif (Time.now.hour == 15 && Time.now.min > 54)
+  #     return "before_closing"
+  #   else
+  #     return "close"
+  #   end
+  # end
+
+  def market_moment(opening_hour, closing_hour)
+    if Time.now.utc > opening_hour && Time.now.utc < closing_hour - 5.minutes
       return "open"
-    elsif (Time.now.hour == 15 && Time.now.min > 54)
+    elsif Time.now.utc >= closing_hour - 5.minutes && Time.now.utc < closing_hour
       return "before_closing"
     else
       return "close"
