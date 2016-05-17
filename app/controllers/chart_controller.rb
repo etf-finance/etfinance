@@ -48,7 +48,12 @@ class ChartController < ApplicationController
 
 
   def premium
+
+    yahoo_client = YahooFinance::Client.new
+    
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+
+    yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
 
     @table_array = []
 
@@ -61,7 +66,15 @@ class ChartController < ApplicationController
         @new_coef_class = "recent"
         tomorrow_coef = Coefficient.where(symbol: symbol).last.value
       end
-      previous_close = Quote.where(symbol: symbol).last.close
+
+
+      if Quote.where(symbol: symbol).blank?
+        data = yahoo_client.quotes([symbol], [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
+        os_to_db(data[0])
+      end
+
+      previous_close = Quote.where(symbol: symbol).last.previous_close
+
       nbr_shares_today = ((today_coef/previous_close)*10000) 
       nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) 
       delta = nbr_shares_tomorrow -  nbr_shares_today
@@ -144,6 +157,18 @@ class ChartController < ApplicationController
 
   def coef(x)
     Coefficient.where(symbol: x.symbol).last.value
+  end
+
+
+  def yahoo_to_db(array)
+    array.each do |el|
+      Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f)
+    end
+  end
+
+  def os_to_db(object)
+    quote = Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f)
+    return quote
   end
 
 

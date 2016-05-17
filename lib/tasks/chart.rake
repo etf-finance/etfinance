@@ -1,21 +1,6 @@
 namespace :chart do
   desc "Update quotes in google spreadsheet"
 
-  desc "populate Quote model"
-  task new_quote: :environment do
-  # disable_active_record_logger
-    10.times do 
-      yahoo_client = YahooFinance::Client.new
-      data = yahoo_client.quotes(["AAPL"], [:ask, :bid, :last_trade_date])
-      quote = Quote.create(value: data[0].ask.to_f*rand)
-
-      chart = Chart.last.created_at.day == Time.now.day ? Chart.last : Chart.create
-      chart.data << {date: quote.created_at, value: quote.value.round(2)}
-      chart.save
-
-      puts "Done."
-    end
-  end
 
 
   desc "populate Quote model"
