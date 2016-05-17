@@ -1,2 +1,149 @@
-<h1>Chart#basic</h1>
-<p>Find me in app/views/chart/basic.html.erb</p>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
+<div class="container-devise">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h2><%= current_user.first_name%>'s values of <%= @date.strftime("%b %d, %Y")%></h2>
+        <p><%= link_to new_subscriber_path, data: { no_turbolink: true } do %>
+          <button class="btn btn-primary">Subscribe to our live performance charts</button>
+        <% end %></p>
+        
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="perf-graph">
+          <%= content_tag :div, "", id: "line_chart", data: {section:@chart_data}, class: "chart" %>
+        </div>
+        
+      </div>
+    </div>
+    <hr>
+    
+    <table class="table table-striped perf-graph">
+      <thead>
+      <tr>
+        <th><%= @market_moment%></th>
+        <th><%= @date.strftime("%b %d, %Y")%></th>
+        <th></th>
+        <th><%= (@date+1.days).strftime("%b %d, %Y")%></th>
+      </tr>
+        <tr>
+          <th>Symbol</th>
+          <th>Coefficient</th>
+          <th># shares</th>
+          <th>Coefficient</th>
+          <th># shares</th>
+          <th>Delta</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @table_array.each do |row| %>
+
+          <td><%= row[:symbol] %></td>
+          <td><%= row[:today_coef].round(2)%></td>
+          <td><%= row[:nbr_shares_today].round%></td>
+          <td class= "<%= @new_coef_class %>"><%= row[:tomorrow_coef].round(2)%></td>
+          <td class= "<%= @new_coef_class %>"><%= row[:nbr_shares_tomorrow].round%></td>
+          <% if row[:delta] == 0 %>
+            <td> - </td>
+          <% else %>
+            <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta].round(2) %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+</div>
+
+
+<script>
+
+	var array = [];
+
+  var data = $('#line_chart').data('section');
+
+  for (i in data) {
+  	array.push(data[i].value)
+  };
+
+
+    $(document).ready(function() {
+        barChart();
+
+    });
+
+
+
+    function barChart() {
+
+
+
+
+
+
+    	Morris.Line({
+      // ID of the element in which to draw the chart.
+      element: 'line_chart',
+      // Chart data records -- each entry in this array corresponds to a point on
+      // the chart.
+      data: $('#line_chart').data('section'),
+      // The name of the data record attribute that contains x-values.
+      xkey: 'time',
+      // A list of names of data record attributes that contain y-values.
+      ykeys: ['value'],
+
+      resize: true,
+
+      parseTime: false,
+
+      // behaveLikeLine: true,
+
+      fillOpacity: 0.2,
+
+      goals: [0],
+
+      goalStrokeWidth: 3,
+
+      lineColors: ['#55b0d6'],
+
+      ymin: Math.floor(Math.min(...array)),
+      ymax: Math.ceil(Math.max(...array)),
+      // xLabels: "week",
+
+      // LabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+      // xLabelFormat: function (x) { return x.toString(); },
+
+
+
+      // ymax: 10;
+
+      // dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+      // xLabels: 'week',
+
+      // xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+
+      // xLabelFormat: function (x) { return x; },
+
+
+
+
+      // Labels for the ykeys -- will be displayed when you hover over the
+      // chart.
+      labels: ['Value']
+    });
+  }
+
+
+</script>
+
+
+

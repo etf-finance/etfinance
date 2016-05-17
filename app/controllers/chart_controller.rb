@@ -8,11 +8,8 @@ class ChartController < ApplicationController
 
 
   before_action :authenticate_user!
-  # , :except => [:index]
 
-  def basic
-  	
-  end
+
 
   def sections
     @futures_class = "active"
@@ -107,34 +104,65 @@ class ChartController < ApplicationController
     end
 
 
-
-    # if market_moment != 'before_closing'
-    #   @new_coef_class = "before-closing"
-    # end
-
     yahoo_client = YahooFinance::Client.new
     yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
     
-    charts = Chart.all
-    size = charts.size
-    chart_not_premium = charts[size-5]
 
     
     if current_user.stripe_id.nil?
-      redirect_to new_subscriber_path
+      redirect_to chart_basic_path
     else
       customer = Stripe::Customer.retrieve(current_user.stripe_id)
 
       if customer.subscriptions.data.blank? || !current_user.subscribed
-        redirect_to new_subscriber_path
-        # @date = Time.now - 4.days
-        # data = chart_not_premium.data
-        # @chart_data = data
+        redirect_to chart_basic_path
       else
         @date = Time.now
         @chart_data= Chart.last.data
       end
     end
+  end
+
+  def basic
+
+    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+
+    charts = Chart.all
+    size = charts.size
+    # chart = charts[size-5]
+    chart = Chart.last
+    @date = Time.now - 4.days
+    @chart_data= chart.data
+
+
+    @table_array = []
+
+    @symbols_array.each do |symbol|
+
+      today_coef = Coefficient.where(symbol: symbol).last(2).first.value 
+      @new_coef_class = "recent"
+      tomorrow_coef = Coefficient.where(symbol: symbol).last(1).first.value
+
+      previous_close = Quote.where(symbol: symbol).last(1).first.previous_close
+
+      nbr_shares_today = ((today_coef/previous_close)*10000) 
+      nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) 
+      delta = nbr_shares_tomorrow -  nbr_shares_today
+
+      obj = {
+        symbol: symbol,
+        today_coef: today_coef,
+        tomorrow_coef: tomorrow_coef, 
+        previous_close: previous_close,
+        nbr_shares_today: nbr_shares_today, 
+        nbr_shares_tomorrow: nbr_shares_tomorrow, 
+        delta: delta 
+      }
+      @table_array << obj
+    end
+
+
+
   end
 
 

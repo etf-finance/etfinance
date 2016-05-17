@@ -129,7 +129,7 @@ aside {
 
 .navbar-default .nav > li.active>a,
 .navbar-default .nav>li.active>a:focus {
-    color: $primary-color-dark!important;
+    color: $primary-color-dark !important;
     background-color: transparent;
 }
 
@@ -527,10 +527,13 @@ body {
     // height: 100vh;
     // min-height: 600px;
     padding-top:150px;
-    h2, h3 {
+    h2, h3{
         color: $white-color;
         text-align: left;
         margin-bottom: 50px;
+    }
+    p {
+        text-align: left;
     }
 }
     

@@ -45,8 +45,8 @@
                             <%= link_to "Sign out", destroy_user_session_path, method: :delete %>
                         </li>
                     <% end %>
-                    <li>
-                        <%= link_to "Charts", chart_premium_path, class: "btn, btn-primary", data: { no_turbolink: true }%>
+                    <li class="<%= 'active' if params[:controller] == 'chart' %>">
+                        <%= link_to "Live Charts", chart_premium_path, class: "btn, btn-primary", data: { no_turbolink: true }%>
                     </li>
                     
                 </ul>
