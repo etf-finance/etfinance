@@ -50,7 +50,9 @@ class SubscribersController < ApplicationController
 
 
 	def show
-		@sub = Stripe::Customer.retrieve(current_user.stripe_id).subscriptions.data.first
+		if current_user.subscribed && current_user.stripe_id.present? && Stripe::Customer.retrieve(current_user.stripe_id).subscriptions.data.present?
+			@sub = Stripe::Customer.retrieve(current_user.stripe_id).subscriptions.data.first
+		end
 	end
 
 	def update

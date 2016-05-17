@@ -3,30 +3,48 @@
     <div class="pricing">
       <div class="row">
 
+        <% if @sub.present? %>
+          <div class="col-md-4 col-md-offset-4">
+            <div class="pricing-table">
+              <div class="pricing-header">
+                <p class="pricing-title">Your subscription details</p>
+              </div>
 
-         <div class="col-md-4 col-md-offset-4">
-          <div class="pricing-table">
-            <div class="pricing-header">
-              <p class="pricing-title">Your subscription details</p>
-            </div>
-
-            <div class="pricing-list">
-              <ul>
-                <li><i class="fa fa-calendar-check-o "></i>From <%= Time.at(@sub.current_period_start).strftime("%b %d, %Y")%></li>
-                <li><i class="fa fa-calendar-times-o "></i>To <%= Time.at(@sub.current_period_end).strftime("%b %d, %Y")%></li>
-                <li><i class="fa <%= "fa-#{@sub.plan.currency}"%>"></i><%= @sub.plan.amount/100%></li>
-              </ul>
+              <div class="pricing-list">
+                <ul>
+                  <li><i class="fa fa-calendar-check-o "></i>From <%= Time.at(@sub.current_period_start).strftime("%b %d, %Y")%></li>
+                  <li><i class="fa fa-calendar-times-o "></i>To <%= Time.at(@sub.current_period_end).strftime("%b %d, %Y")%></li>
+                  <li><i class="fa <%= "fa-#{@sub.plan.currency}"%>"></i><%= @sub.plan.amount/100%></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+          <%= link_to "Explore our live charts", chart_premium_path, class: "btn btn-success btn-xl", data: { no_turbolink: true } %>
 
+        </div>
       </div>
-      <div class="row">
-      	<div class="col-md-4 col-md-offset-4">
-      		<%= link_to "Explore our live charts", chart_premium_path, class: "btn btn-success btn-xl", data: { no_turbolink: true } %>
-      	</div>
-      </div>
+
+        <% else %>
+          <div class="col-md-4 col-md-offset-4">
+            <div class="pricing-table">
+              <div class="pricing-header">
+                <p class="pricing-title">You haven't subscribed yet</p>
+              </div>
+
+              <div class="pricing-list">
+              <%= link_to "Subscribe now", new_subscriber_path, class: "btn btn-xl btn-danger",data: { no_turbolink: true } %>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+
     </div>
   </div>  
 
