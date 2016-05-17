@@ -10,6 +10,9 @@ class ChartController < ApplicationController
   end
 
   def sections
+    @futures_class = "active"
+    @perf_class = "inactive"
+
     yahoo_client = YahooFinance::Client.new
 
     @sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG", "^VIXSEP", "^VIXOCT", "^VIXNOV"]# array de test qui pourra être actualisé 
@@ -48,6 +51,9 @@ class ChartController < ApplicationController
 
 
   def premium
+
+    @perf_class = "active"
+    @futures_class = "inactive"
 
     yahoo_client = YahooFinance::Client.new
     

@@ -27,10 +27,20 @@ hr.light {
 }
 
 a {
-    color: $primary-color;
+    color: $primary-color-dark;
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s;
+}
+
+
+
+.nav-pills a {
+    color: $grey-color;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: bold;
 }
 
 a:hover,
@@ -644,4 +654,9 @@ body {
 
 th {
     // font-size: 7px;
+}
+
+
+.inactive {
+    font-size: 30px;
 }

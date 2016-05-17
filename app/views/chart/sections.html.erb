@@ -4,6 +4,9 @@
 
 <div class="container-devise">
   <div class="container">
+  <div class="row">
+   <%= render partial: "links" %>
+  </div>
   <h2>Futures</h2>
     <div class="row">
       <div class="col-xs-12 yahoo-chart perf-graph">
@@ -16,7 +19,7 @@
     <h2>Live quotations</h2>
     <div class="row perf-graph">
       <% @sections_array.each do |quote| %>
-        <div class="col-sm-3 col-xs-6 yahoo-chart">
+        <div class="col-md-4 col-sm-6 col-xs-12 yahoo-chart">
           <%= image_tag("http://chart.finance.yahoo.com/z?s=#{quote}&t=1d", :alt => "rss feed") %>
         </div>
       <% end %>

@@ -4,6 +4,7 @@
 
 <div class="container-devise">
   <div class="container">
+    <%= render partial: "links" %>
     <div class="row">
       <div class="col-xs-12">
         <h2><%= current_user.first_name%>'s values of <%= @date.strftime("%b %d, %Y")%></h2>
