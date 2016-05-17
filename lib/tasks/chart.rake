@@ -6,6 +6,7 @@ namespace :chart do
   desc "populate Quote model"
   task picking_quotes: :environment do
   # disable_active_record_logger
+    if market_moment == "open"
       symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
       yahoo_client = YahooFinance::Client.new
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
@@ -29,6 +30,7 @@ namespace :chart do
       end
 
       puts "Done."
+    end
   end
 
 
@@ -102,4 +104,17 @@ namespace :chart do
     end
     return array
   end
+
+  def market_moment
+    opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 14, 30, 0)
+    closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 21, 00, 0)
+    if Time.now.utc > opening_time && Time.now.utc < closing_time - 5.minutes
+      return "open"
+    elsif Time.now.utc >= closing_time - 5.minutes && Time.now.utc < closing_time
+      return "before_closing"
+    else
+      return "close"
+    end
+  end
+
 end

@@ -158,10 +158,10 @@ class ChartController < ApplicationController
   #   end
   # end
 
-  def market_moment(opening_hour, closing_hour)
-    if Time.now.utc > opening_hour && Time.now.utc < closing_hour - 5.minutes
+  def market_moment(opening_time, closing_time)
+    if Time.now.utc > opening_time && Time.now.utc < closing_time - 5.minutes
       return "open"
-    elsif Time.now.utc >= closing_hour - 5.minutes && Time.now.utc < closing_hour
+    elsif Time.now.utc >= closing_time - 5.minutes && Time.now.utc < closing_time
       return "before_closing"
     else
       return "close"
