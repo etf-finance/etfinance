@@ -12,14 +12,57 @@ class ChartController < ApplicationController
 
 
   def sections
-    @futures_class = "active"
-    @perf_class = "inactive"
 
     yahoo_client = YahooFinance::Client.new
 
-    @sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG", "^VIXSEP", "^VIXOCT", "^VIXNOV"]# array de test qui pourra être actualisé 
+    future_month_names = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec', 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+
+    month_number = Time.now.month
+
+    symbols =  ["^VIX" + future_month_names[month_number - 1].upcase, "^VIX" + future_month_names[month_number].upcase]
+
+    data = yahoo_client.quotes(symbols)
+
+    if data[0].last_trade_date == data[1].last_trade_date
+      @i = month_number
+    else
+      @i = month_number + 1
+    end
+
+    @sections_array = []
+    for n in (@i..@i+6)
+      @sections_array << '^VIX' + future_month_names[n - 1].upcase
+    end
+
+    date = Time.now.to_date
+
+    dif = 17 - date.day
+
+    @date_array = [date]
+
+    if data[0].last_trade_date == data[1].last_trade_date
+      @date_array << date + dif.days
+    else
+      @date_array << date + dif.days + 1.months
+    end
+
+    for n in (2..@sections_array.size-1)
+      @date_array << @date_array.last + 1.months
+    end
 
 
+
+
+
+
+    
+    @futures_class = "active"
+    @perf_class = "inactive"
+
+
+    # @sections_array = ["^VIXMAY", "^VIXJUN", "^VIXJUL", "^VIXAUG", "^VIXSEP", "^VIXOCT", "^VIXNOV"]# array de test qui pourra être actualisé 
+
+    
 
     data = yahoo_client.quotes(@sections_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
 
@@ -31,23 +74,37 @@ class ChartController < ApplicationController
     # Construction de l'array servant aux graph des futures
     @futures = []
 
-    date = Time.now
 
-    data.each_with_index do |el|
+
+  
+
+    data.each_with_index do |el, i|
       if el.ask.to_f == 0 && el.bid.to_f == 0
         value = el.last_trade_price.to_f
       else
         value = (el.bid.to_f + el.ask.to_f)/2
       end
-      obj = {symbol: el.symbol, value: value, date: date}
+      obj = {symbol: el.symbol, value: value, date: @date_array[i]}
       @futures << obj
-      dif = 21 - date.day
-      if dif > 0
-        date += dif.days
-      else
-        date += 1.months
-      end
     end
+
+
+    # data.each_with_index do |el|
+    #   if el.ask.to_f == 0 && el.bid.to_f == 0
+    #     value = el.last_trade_price.to_f
+    #   else
+    #     value = (el.bid.to_f + el.ask.to_f)/2
+    #   end
+    #   obj = {symbol: el.symbol, value: value, date: date}
+    #   @futures << obj
+    #   dif = 21 - date.day
+    #   if dif > 0
+    #     date += dif.days
+    #   else
+    #     date += 1.months
+    #   end
+    # end
+
   end
 
 

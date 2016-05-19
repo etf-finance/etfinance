@@ -1,5 +1,4 @@
 namespace :chart do
-  desc "Update quotes in google spreadsheet"
 
 
 
@@ -30,6 +29,8 @@ namespace :chart do
       end
 
       puts "Done."
+    else
+      puts "market close"
     end
   end
 

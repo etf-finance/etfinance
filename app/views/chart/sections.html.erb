@@ -38,6 +38,9 @@
 
 
 <script>
+
+  var monthNumber = <%= @i %> ;
+
 	var array = [];
 
   date_array = [];
@@ -55,6 +58,7 @@
     ];
 
   var futureMonthNames = ["jan", "feb", "mar", "apr", "may", "jun",
+      "jul", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "mar", "apr", "may", "jun",
       "jul", "aug", "sep", "oct", "nov", "dec"
     ];
 
@@ -89,12 +93,8 @@
       events: date_array,
 
       dateFormat: function (x) {
-        var date = new Date(x)
-        if ((date.getDate()) < 21) {
-          var month = date.getMonth()
-        } else {
-          var month = date.getMonth()+1
-        };
+        var date = new Date(x);
+        var month = date.getMonth()+1;
           return "^XIV" + futureMonthNames[month].toUpperCase() + " ("+ new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]+")";
       },
 
@@ -117,42 +117,6 @@
 
 
 
-
-    	Morris.Line({
-      // ID of the element in which to draw the chart.
-      element: 'line_chart',
-      // Chart data records -- each entry in this array corresponds to a point on
-      // the chart.
-      data: $('#line_chart').data('section'),
-      // The name of the data record attribute that contains x-values.
-      xkey: 'date',
-      // A list of names of data record attributes that contain y-values.
-      ykeys: ['value'],
-
-      resize: true,
-
-      parseTime: false,
-
-      events: ['2016-05-05', '2016-02-06', '2016-03-07'],
-
-
-      // ymax: 10;
-
-      // dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
-
-      // xLabels: 'week',
-
-      xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
-
-      // xLabelFormat: function (x) { return x; },
-
-
-
-
-      // Labels for the ykeys -- will be displayed when you hover over the
-      // chart.
-      labels: ['Value']
-    });
 
 
 
