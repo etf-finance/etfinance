@@ -21,6 +21,41 @@
       </div>
     </div>
     <hr>
+
+    <h2>Tableau de vérification pour les admins</h2>
+
+    <table class="table table-striped perf-graph">
+      <thead>
+        <tr>
+          <th>SYMBOL</th>
+          <th>ASK</th>
+          <th>BID</th>
+          <th>CLOSE</th>
+          <th>COEF</th>
+          <th>((B+A)/2 - C)*Coef</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% total = 0 %>
+      <% @symbols_array.each do |symbol| %>
+        <% ask = Quote.where(symbol: symbol).last.ask %>
+        <% bid = Quote.where(symbol: symbol).last.bid %>
+        <% close = Quote.where(symbol: symbol).last.close %>
+        <% coefficient = Coefficient.where(symbol: symbol).where(expired: true).last.value %>
+        <td><%= symbol %></td>
+        <td><%= ask %></td>
+        <td><%= bid %></td>
+        <td><%= close %></td>
+        <td><%= coefficient %></td>
+        <td><%= (coefficient * ((bid+ask)/2 - close)).round(2)%></td>
+        </tr>
+        <% total += (coefficient * ((bid+ask)/2 - close)) %>
+      <% end %>
+      </tbody>
+    </table>
+    <h3>PERF GLOBALE : <%= total.round(2) %></h3>
+
+    <hr>
     
     <table class="table table-striped perf-graph">
       <thead>
