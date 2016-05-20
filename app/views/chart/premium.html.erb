@@ -1,6 +1,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
 
 <div class="container-devise">
   <div class="container">
@@ -54,6 +55,18 @@
       </tbody>
     </table>
     <h3>PERF GLOBALE : <%= total.round(2) %></h3>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="perf-graph">
+          <%= content_tag :div, "", id: "spy_chart", data: {section:@quotes_array}, class: "chart" %>
+        </div>
+        
+      </div>
+    </div>
+
 
     <hr>
     
@@ -117,6 +130,36 @@
     function barChart() {
 
 
+      Morris.Line({
+      // ID of the element in which to draw the chart.
+      element: 'spy_chart',
+      // Chart data records -- each entry in this array corresponds to a point on
+      // the chart.
+      data: $('#spy_chart').data('section'),
+      // The name of the data record attribute that contains x-values.
+      xkey: 'time',
+      // A list of names of data record attributes that contain y-values.
+      ykeys: ["vxx_ask", "vxx_bid", "vxz_ask", "vxz_bid", "xiv_ask", "xiv_bid", "ziv_ask", "ziv_bid"],
+
+      resize: true,
+
+      parseTime: false,
+
+      // behaveLikeLine: true,
+
+      fillOpacity: 0.2,
+
+      goals: [0],
+
+      goalStrokeWidth: 3,
+
+      lineColors: ['#55b0d6'],
+
+      labels: ["vxx_ask", "vxx_bid", "vxz_ask", "vxz_bid", "xiv_ask", "xiv_bid", "ziv_ask", "ziv_bid"]
+    });
+
+
+
 
 
 
@@ -148,29 +191,7 @@
 
       ymin: Math.floor(Math.min(...array)),
       ymax: Math.ceil(Math.max(...array)),
-      // xLabels: "week",
 
-      // LabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
-
-      // xLabelFormat: function (x) { return x.toString(); },
-
-
-
-      // ymax: 10;
-
-      // dateFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
-
-      // xLabels: 'week',
-
-      // xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
-
-      // xLabelFormat: function (x) { return x; },
-
-
-
-
-      // Labels for the ykeys -- will be displayed when you hover over the
-      // chart.
       labels: ['Value']
     });
   }

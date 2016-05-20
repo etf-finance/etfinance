@@ -163,7 +163,35 @@ class ChartController < ApplicationController
 
     yahoo_client = YahooFinance::Client.new
     yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
-    
+
+
+
+
+    # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============
+
+    quotes = Quote.where(symbol: @symbols_array.first).where('created_at > ?', Time.now.to_date)
+    moments = quotes.pluck(:created_at)
+
+    @quotes_array = []
+
+    moments.each_with_index do |date, index|
+      obj = {date: date}
+      @symbols_array.each do |symbol|
+        obj[(symbol.downcase+"_ask").to_sym] = Quote.where(symbol: symbol).last(moments.size)[index].ask
+        obj[(symbol.downcase+"_bid").to_sym] = Quote.where(symbol: symbol).last(moments.size)[index].bid
+      end
+      @quotes_array << obj
+    end
+
+
+    @values_array = []
+    @symbols_array.each do |symbol|
+      @values_array << symbol.downcase+"_ask"
+      @values_array << symbol.downcase+"_bid"
+    end
+
+
+    # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============  
 
     
     if current_user.stripe_id.nil?
@@ -231,17 +259,7 @@ class ChartController < ApplicationController
   private
 
 
-  # def market_moment
-  #   opening_hour = 5
-  #   closing_hour = 15
-  #   if Time.now.hour > opening_hour && Time.now.hour <= closing_hour-1 || (Time.now.hour == closing_hour-1 && Time.now.min > 40)
-  #     return "open"
-  #   elsif (Time.now.hour == 15 && Time.now.min > 54)
-  #     return "before_closing"
-  #   else
-  #     return "close"
-  #   end
-  # end
+
 
   def market_moment(opening_time, closing_time)
     if Time.now.utc > opening_time && Time.now.utc < closing_time - 5.minutes
