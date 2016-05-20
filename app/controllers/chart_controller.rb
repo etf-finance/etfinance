@@ -191,6 +191,34 @@ class ChartController < ApplicationController
     end
 
 
+    
+
+  # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============  
+
+
+
+
+
+  # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============
+
+    hash = {}
+
+    quotes = Quote.where(symbol: @symbols_array).where('created_at > ?', Time.now.to_date)
+    
+    quotes.each do |quote|
+      if hash[(quote.symbol.downcase+"_ask")].blank?
+        hash[(quote.symbol.downcase+"_ask")] = [quote.ask]
+        hash[(quote.symbol.downcase+"_bid")] = [quote.bid]
+      else
+        hash[(quote.symbol.downcase+"_ask")] << quote.ask
+        hash[(quote.symbol.downcase+"_bid")] << quote.bid
+      end
+    end
+
+    @quotes_hash = hash
+
+
+
     # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============  
 
     
