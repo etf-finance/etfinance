@@ -107,8 +107,8 @@ namespace :chart do
   end
 
   def market_moment
-    opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 14, 30, 0)
-    closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 21, 00, 0)
+    opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, ENV['OPENING_HOUR'], ENV['OPENING_MIN'], 0)
+    closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, ENV['CLOSING_HOUR'], ENV['CLOSING_MIN'], 0)
     if Time.now.utc > opening_time && Time.now.utc < closing_time - 5.minutes
       return "open"
     elsif Time.now.utc >= closing_time - 5.minutes && Time.now.utc < closing_time

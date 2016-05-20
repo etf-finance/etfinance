@@ -15,4 +15,19 @@ module ApplicationHelper
   end
   # ======================
 
+  def test
+    puts "test done !!!!"
+  end
+
+
+  def market_moment(opening_time, closing_time)
+    if Time.now.utc > opening_time && Time.now.utc < closing_time - 5.minutes
+      return "open"
+    elsif Time.now.utc >= closing_time - 5.minutes && Time.now.utc < closing_time
+      return "before_closing"
+    else
+      return "close"
+    end
+  end
+
 end

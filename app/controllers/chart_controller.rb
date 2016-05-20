@@ -2,9 +2,9 @@ class ChartController < ApplicationController
 	# require "google/api_client"
 	# require "google_drive"
 
-  @@opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 14, 30, 0)
+  @@opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, ENV['OPENING_HOUR'], ENV['OPENING_MIN'], 0)
 
-  @@closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 21, 00, 0)
+  @@closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, ENV['CLOSING_HOUR'], ENV['CLOSING_MIN'], 0)
 
 
   before_action :authenticate_user!
