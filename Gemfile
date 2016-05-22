@@ -38,6 +38,8 @@ gem 'jquery-turbolinks'
 
 gem 'devise_security_extension'
 
+gem "stock_quote"
+
 gem 'rails_12factor', group: :production
 
 # Use ActiveModel has_secure_password

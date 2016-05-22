@@ -8,7 +8,12 @@
     <%= render partial: "links" %>
     <div class="row">
       <div class="col-xs-12">
-        <h2><%= current_user.first_name%>'s values of <%= @date.strftime("%b %d, %Y")%></h2>
+        <h2><%= current_user.first_name%>'s values of <%= @chart.created_at.strftime("%b %d, %Y")%></h2>
+        <% if !@premium %>
+          <p><%= link_to new_subscriber_path, data: { no_turbolink: true } do %>
+            <button class="btn btn-xl btn-danger">Subscribe to our live performance charts</button>
+          <% end %></p>
+        <% end %>
         
       </div>
     </div>
@@ -23,97 +28,102 @@
     </div>
     <hr>
 
-    <h2>Tableau de vérification pour les admins</h2>
+    <% if current_user.admin? %>
 
-    <table class="table table-striped perf-graph">
-      <thead>
+      <h2>Tableau de vérification pour les admins</h2>
+
+      <table class="table table-striped perf-graph">
+        <thead>
+          <tr>
+            <th>SYMBOL</th>
+            <th>ASK</th>
+            <th>BID</th>
+            <th>CLOSE</th>
+            <th>COEF</th>
+            <th>((B+A)/2 - C)*Coef</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% total = 0 %>
+        <% @symbols_array.each do |symbol| %>
+          <tr>
+            <% ask = Quote.where(symbol: symbol).last.ask %>
+            <% bid = Quote.where(symbol: symbol).last.bid %>
+            <% close = Quote.where(symbol: symbol).last.close %>
+            <% coefficient = Coefficient.where(symbol: symbol).where(expired: true).last.value %>
+            <td><%= symbol %></td>
+            <td><%= ask %></td>
+            <td><%= bid %></td>
+            <td><%= close %></td>
+            <td><%= coefficient %></td>
+            <td><%= (coefficient * ((bid+ask)/2 - close)).round(2)%></td>
+          </tr>
+          <% total += (coefficient * ((bid+ask)/2 - close)) %>
+        <% end %>
+        </tbody>
+      </table>
+      <h3>PERF GLOBALE : <%= total.round(2) %></h3>
+
+      <hr>
+
+      <h2>Tableau de vérification pour les admins</h2>
+
+      <table class="table table-striped perf-graph">
+        <tbody>
+        <% @quotes_hash.each do |key, values| %>
+          <tr>
+            <td><%= key %></td>
+            <% values.each do |value| %>
+              <td><%= value %></td>
+            <% end %>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+
+
+
+      <hr>
+
+    <% end %>
+
+    <% if @premium %>
+      <table class="table table-striped perf-graph">
+        <thead>
         <tr>
-          <th>SYMBOL</th>
-          <th>ASK</th>
-          <th>BID</th>
-          <th>CLOSE</th>
-          <th>COEF</th>
-          <th>((B+A)/2 - C)*Coef</th>
+          <th><%= @market_moment%></th>
+          <th>TODAY</th>
+          <th></th>
+          <th>TOMORROW</th>
         </tr>
-      </thead>
-      <tbody>
-      <% total = 0 %>
-      <% @symbols_array.each do |symbol| %>
-        <tr>
-          <% ask = Quote.where(symbol: symbol).last.ask %>
-          <% bid = Quote.where(symbol: symbol).last.bid %>
-          <% close = Quote.where(symbol: symbol).last.close %>
-          <% coefficient = Coefficient.where(symbol: symbol).where(expired: true).last.value %>
-          <td><%= symbol %></td>
-          <td><%= ask %></td>
-          <td><%= bid %></td>
-          <td><%= close %></td>
-          <td><%= coefficient %></td>
-          <td><%= (coefficient * ((bid+ask)/2 - close)).round(2)%></td>
-        </tr>
-        <% total += (coefficient * ((bid+ask)/2 - close)) %>
-      <% end %>
-      </tbody>
-    </table>
-    <h3>PERF GLOBALE : <%= total.round(2) %></h3>
-
-    <hr>
-
-    <h2>Tableau de vérification pour les admins</h2>
-
-    <table class="table table-striped perf-graph">
-      <tbody>
-      <% @quotes_hash.each do |key, values| %>
-        <tr>
-          <td><%= key %></td>
-          <% values.each do |value| %>
-            <td><%= value %></td>
-          <% end %>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-
-
-
-
-    <hr>
-
-    
-    <table class="table table-striped perf-graph">
-      <thead>
-      <tr>
-        <th><%= @market_moment%></th>
-        <th>TODAY</th>
-        <th></th>
-        <th>TOMORROW</th>
-      </tr>
-        <tr>
-          <th>Symbol</th>
-          <th>Coefficient</th>
-          <th># shares</th>
-          <th>Coefficient</th>
-          <th># shares</th>
-          <th>Delta</th>
-        </tr>
-      </thead>
-      <tbody>
-      <% @table_array.each do |row| %>
-        <tr>
-          <td><%= row[:symbol] %></td>
-          <td><%= row[:today_coef].round(2)%></td>
-          <td><%= row[:nbr_shares_today].round%></td>
-          <td class= "<%= @new_coef_class %>"><%= row[:tomorrow_coef].round(2)%></td>
-          <td class= "<%= @new_coef_class %>"><%= row[:nbr_shares_tomorrow].round%></td>
-          <% if row[:delta] == 0 %>
-            <td> - </td>
-          <% else %>
-            <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta].round(2) %></td>
-          <% end %>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
+          <tr>
+            <th>Symbol</th>
+            <th>Coefficient</th>
+            <th># shares</th>
+            <th>Coefficient</th>
+            <th># shares</th>
+            <th>Delta</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @table_array.each do |row| %>
+          <tr>
+            <td><%= row[:symbol] %></td>
+            <td><%= row[:today_coef].round(2)%></td>
+            <td><%= row[:nbr_shares_today].round%></td>
+            <td class= "<%= @new_coef_class %>"><%= row[:tomorrow_coef].round(2)%></td>
+            <td class= "<%= @new_coef_class %>"><%= row[:nbr_shares_tomorrow].round%></td>
+            <% if row[:delta] == 0 %>
+              <td> - </td>
+            <% else %>
+              <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta].round(2) %></td>
+            <% end %>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </div>
   
 </div>

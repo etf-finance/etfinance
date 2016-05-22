@@ -111,130 +111,98 @@ class ChartController < ApplicationController
 
   def premium
 
-    @refreshing_time = @@closing_time.localtime - 5.minutes
+    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
-    @market_moment = market_moment(@@opening_time, @@closing_time)
+    @refreshing_time = @@closing_time.localtime - 5.minutes
 
     @perf_class = "active"
     @futures_class = "inactive"
 
-    yahoo_client = YahooFinance::Client.new
-    
-    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+    if current_user.subscriber?
 
-    yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
+      @chart = Chart.last
 
-    @table_array = []
+      @premium = true
 
-    @symbols_array.each do |symbol|
-      today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value 
-      if @market_moment == "open"
-        @new_coef_class = "expired"
-        tomorrow_coef = today_coef
-      else
-        @new_coef_class = "recent"
-        tomorrow_coef = Coefficient.where(symbol: symbol).last.value
-      end
+      @market_moment = market_moment(@@opening_time, @@closing_time)
 
 
-      if Quote.where(symbol: symbol).blank?
-        data = yahoo_client.quotes([symbol], [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
-        os_to_db(data[0])
-      end
+      @table_array = []
 
-      previous_close = Quote.where(symbol: symbol).last.previous_close
-
-      nbr_shares_today = ((today_coef/previous_close)*10000) 
-      nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) 
-      delta = nbr_shares_tomorrow -  nbr_shares_today
-
-      obj = {
-        symbol: symbol,
-        today_coef: today_coef,
-        tomorrow_coef: tomorrow_coef, 
-        previous_close: previous_close,
-        nbr_shares_today: nbr_shares_today, 
-        nbr_shares_tomorrow: nbr_shares_tomorrow, 
-        delta: delta.round.to_i
-      }
-      @table_array << obj
-    end
-
-
-    yahoo_client = YahooFinance::Client.new
-    yahoo_data = yahoo_client.quotes(@symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
-
-
-
-
-    # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============
-
-    quotes = Quote.where(symbol: @symbols_array.first).where('created_at > ?', Time.now.to_date)
-    moments = quotes.pluck(:created_at)
-
-    @quotes_array = []
-
-    moments.each_with_index do |date, index|
-      obj = {date: date}
       @symbols_array.each do |symbol|
-        obj[(symbol.downcase+"_ask").to_sym] = Quote.where(symbol: symbol).last(moments.size)[index].ask
-        obj[(symbol.downcase+"_bid").to_sym] = Quote.where(symbol: symbol).last(moments.size)[index].bid
-      end
-      @quotes_array << obj
-    end
+        today_coef = Coefficient.where(symbol: symbol).where(expired: true).last.value 
+        if @market_moment == "open"
+          @new_coef_class = "expired"
+          tomorrow_coef = today_coef
+        else
+          @new_coef_class = "recent"
+          tomorrow_coef = Coefficient.where(symbol: symbol).last.value
+        end
 
 
-    @values_array = []
-    @symbols_array.each do |symbol|
-      @values_array << symbol.downcase+"_ask"
-      @values_array << symbol.downcase+"_bid"
-    end
+        if Quote.where(symbol: symbol).blank?
+          data = yahoo_client.quotes([symbol], [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
+          os_to_db(data[0])
+        end
 
+        previous_close = Quote.where(symbol: symbol).last.previous_close
 
-    
+        nbr_shares_today = ((today_coef/previous_close)*10000) 
+        nbr_shares_tomorrow = ((tomorrow_coef/previous_close)*10000) 
+        delta = nbr_shares_tomorrow -  nbr_shares_today
 
-  # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============  
-
-
-
-
-
-  # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============
-
-    hash = {}
-
-    quotes = Quote.where(symbol: @symbols_array).where('created_at > ?', Time.now.to_date)
-    
-    quotes.each do |quote|
-      if hash[(quote.symbol.downcase+"_ask")].blank?
-        hash[(quote.symbol.downcase+"_ask")] = [quote.ask]
-        hash[(quote.symbol.downcase+"_bid")] = [quote.bid]
-      else
-        hash[(quote.symbol.downcase+"_ask")] << quote.ask
-        hash[(quote.symbol.downcase+"_bid")] << quote.bid
+        obj = {
+          symbol: symbol,
+          today_coef: today_coef,
+          tomorrow_coef: tomorrow_coef, 
+          previous_close: previous_close,
+          nbr_shares_today: nbr_shares_today, 
+          nbr_shares_tomorrow: nbr_shares_tomorrow, 
+          delta: delta.round.to_i
+        }
+        @table_array << obj
       end
     end
 
-    @quotes_hash = hash
-
-
-
-    # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============  
-
-    
-    if current_user.stripe_id.nil?
-      redirect_to chart_basic_path
-    else
-      customer = Stripe::Customer.retrieve(current_user.stripe_id)
-
-      if customer.subscriptions.data.blank? || !current_user.subscribed
-        redirect_to chart_basic_path
-      else
-        @date = Time.now
-        @chart_data= Chart.last.data
-      end
+    if !current_user.subscriber?
+      @premium = false
+      @chart = Chart.last(4).first
     end
+
+    @chart_data = @chart.data
+
+
+
+      # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============
+
+    if current_user.admin?
+
+      hash = {}
+
+      quotes = Quote.where(symbol: @symbols_array).where('created_at > ?', @chart.created_at.to_date)
+      
+      quotes.each do |quote|
+        if hash[(quote.symbol.downcase+"_ask")].blank?
+          hash[(quote.symbol.downcase+"_ask")] = [quote.ask]
+          hash[(quote.symbol.downcase+"_bid")] = [quote.bid]
+        else
+          hash[(quote.symbol.downcase+"_ask")] << quote.ask
+          hash[(quote.symbol.downcase+"_bid")] << quote.bid
+        end
+      end
+
+      @quotes_hash = hash
+
+    end
+
+
+
+    # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES ============= 
+
+
   end
+
+
 
   def basic
 
