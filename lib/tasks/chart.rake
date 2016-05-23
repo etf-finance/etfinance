@@ -25,7 +25,7 @@ namespace :chart do
       chart.save
       
       yahoo_data.each do |el|
-        Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f)
+        Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value)
       end
 
       puts "Done."
@@ -84,7 +84,7 @@ namespace :chart do
 
 
   def coef(x)
-    Coefficient.where(symbol: x.symbol).last.value
+    Coefficient.where(symbol: x.symbol).where(expired: true).last.value
   end
 
 
