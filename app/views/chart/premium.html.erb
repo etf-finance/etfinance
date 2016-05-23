@@ -145,6 +145,8 @@
 
   var dif = max - min
 
+  var mainColor = $('.nav-pills > li.active > a').css("background-color");
+
   
 
   if ((dif % 4) === 1) {
@@ -202,7 +204,7 @@
 
       goalStrokeWidth: 3,
 
-      lineColors: ['#55b0d6'],
+      lineColors: [mainColor],
 
       goalLineColors: ['#C73B04'],
 

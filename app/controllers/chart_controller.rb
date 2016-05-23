@@ -56,7 +56,7 @@ class ChartController < ApplicationController
 
 
     
-    @futures_class = "active"
+    @futures_class = "active active-btn"
     @perf_class = "inactive"
 
 
@@ -111,11 +111,13 @@ class ChartController < ApplicationController
 
   def premium
 
+
+
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
     @refreshing_time = @@closing_time.localtime - 5.minutes
 
-    @perf_class = "active"
+    @perf_class = "active active-btn"
     @futures_class = "inactive"
 
     if current_user.subscriber?
