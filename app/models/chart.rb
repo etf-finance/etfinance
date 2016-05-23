@@ -22,10 +22,10 @@ class Chart < ActiveRecord::Base
 		for n in (1..number_of_moments)
 			batch = quotes[start..stop]
 			value = global_perf(batch).round(2)
-			element = self.data.find{|x| x["value"]==nil }
+			element = Chart.last.data.find{|x| x["value"]==nil }
 			element["value"] = value
-			start += number_of_moments
-			stop += number_of_moments
+			start += symbols_array.size
+			stop += symbols_array.size
 		end
 
 		self.save
