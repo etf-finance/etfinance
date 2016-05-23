@@ -139,6 +139,25 @@
   	array.push(data[i].value)
   };
 
+  var min = Math.floor(Math.min(...array));
+
+  var max = Math.ceil(Math.max(...array));
+
+  var dif = max - min
+
+  
+
+  if ((dif % 4) === 1) {
+    max = max + 1 ;
+  } else if ((dif % 4) === 3) {
+    max = max + 2 ;
+    min = min - 1 ;
+  }
+
+
+
+
+
 
     $(document).ready(function() {
         barChart();
@@ -169,6 +188,10 @@
 
       resize: true,
 
+      lineWidth: 2,
+
+      pointSize: 2,
+
       parseTime: false,
 
       // behaveLikeLine: true,
@@ -181,8 +204,13 @@
 
       lineColors: ['#55b0d6'],
 
-      ymin: Math.floor(Math.min(...array)),
-      ymax: Math.ceil(Math.max(...array)),
+      goalLineColors: ['#C73B04'],
+
+      // ymin: -100,
+      // ymax: 100,
+
+      ymin: min,
+      ymax: max,
 
       labels: ['Value']
     });
