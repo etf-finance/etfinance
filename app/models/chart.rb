@@ -63,7 +63,7 @@ class Chart < ActiveRecord::Base
 			value = global_perf(array).round(2)
 			element = self.data.find{|x| x["value"]==nil }
 			element["value"] = value
-			# element["time"] = time
+
 
 		end
 

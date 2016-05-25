@@ -11,6 +11,12 @@ namespace :chart do
       yahoo_client = YahooFinance::Client.new
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
 
+      quote_array = []
+      yahoo_data.each do |el|
+        quote = Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value, round_time: Time.zone.now.round_off(10.minutes))
+        quote_array << quote
+      end
+
 
       if Chart.last.present?
         chart = (Chart.last.created_at.day == Time.now.day) ? Chart.last : Chart.create
@@ -18,16 +24,21 @@ namespace :chart do
         chart = Chart.create
       end
 
-      element = chart.data.find{|x| x["value"]==nil }
-      element["value"] = ((global_perf(yahoo_data)).round(2))
+      data = chart.data
+      element = data.find{|x| x["value"]==nil }
+      element["value"] = ((global_perf(quote_array)).round(2))
+      quote_array.each do |quote|
+        element[(quote.symbol.downcase+"_ask")] = quote.ask
+        element[(quote.symbol.downcase+"_bid")] = quote.bid
+      end
+      element["first_quote_id"] = quote_array.first.id
+      element["last_quote_id"] = quote_array.last.id
+      chart.data = data
       
 
       # chart.data << obj
       chart.save
       
-      yahoo_data.each do |el|
-        Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value, round_time: Time.zone.now.round_off(10.minutes))
-      end
 
       puts "Done."
     else

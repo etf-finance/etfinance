@@ -68,41 +68,56 @@
 
       <h2>Tableau de vérification pour les admins</h2>
 
+
       <table class="table table-striped perf-graph">
         <thead>
           <tr>
-            <th>symbol</th>
-              <% @chart.data.each do |el| %>
-                <% if el["value"].present? && el["value"] != 0 %>
-                  <th><%= DateTime.parse(el["time"]).strftime("%H:%M")%></th>
-                <% end %>
-              <% end %>
+            <th></th>
+            <th></th>
+            <% @symbols_array.each do |symbol| %>
+              <th><%= symbol%></th>
+              <th></th>
+            <%end %>
+            <th>Quote</th>
+
           </tr>
           <tr>
-            <th>symbol</th>
-              <% @chart.data.each do |el| %>
-                <% if el["value"].present? && el["value"] != 0 %>
-                  <th><%= el["value"]%></th>
-                <% end %>
-              <% end %>
+            <th>TIME</th>
+            <th>PERF</th>
+            <% @symbols_array.each do |symbol| %>
+              <th>ASK</th>
+              <th>BID</th>
+            <% end %>
+            <th>First</th>
+            <th>Last</th>
           </tr>
         </thead>
         <tbody>
-        <% @quotes_hash.each do |key, values| %>
-          <tr>
-            <td><%= key %></td>
-            <% values.each do |value| %>
-              <td><%= value %></td>
+          <% @chart_data.each do |el|%>
+            <% if el["value"].present? && el["value"] != 0 %>
+              <tr>
+                <td><%=DateTime.parse(el["time"]).strftime("%H:%M")%></td>
+                <td><%= el["value"]%></td>
+                <% @symbols_array.each do |symbol| %>
+                  <td><%= el[symbol.downcase+"_ask"]%></td>
+                  <td><%= el[symbol.downcase+"_bid"]%></td>
+                <% end %>
+                <td><%= el["first_quote_id"]%></td>
+                <td><%= el["last_quote_id"]%></td>
+              </tr>
             <% end %>
-          </tr>
-        <% end %>
+            
+          <% end %>
         </tbody>
+  
       </table>
 
 
 
 
       <hr>
+
+
 
     <% end %>
 
