@@ -4,8 +4,8 @@ namespace :chart do
 
   desc "populate Quote model"
   task picking_quotes: :environment do
-  # disable_active_record_logger
-    if market_moment == "open"
+  # disable_active_record_logger    
+    if market_moment == "open" && Time.now.to_date.cwday != 6 && Time.now.to_date.cwday != 7
       symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
       yahoo_client = YahooFinance::Client.new
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
@@ -108,11 +108,14 @@ namespace :chart do
   end
 
   def market_moment
-    opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 10, 0, 0) + 8.minutes
-    closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 20, 0, 0)
-    if Time.now.utc > opening_time && Time.now.utc < closing_time - 5.minutes
+    Time.zone = "America/New_York"
+
+    opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 6, 5, 0)
+    # opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 10, 0, 0) + 8.minutes
+    closing_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 16, 8, 0)
+    if Time.zone.now > opening_time && Time.zone.now < closing_time - 5.minutes
       return "open"
-    elsif Time.now.utc >= closing_time - 5.minutes && Time.now.utc < closing_time
+    elsif Time.zone.now >= closing_time - 5.minutes && Time.now.utc < closing_time
       return "before_closing"
     else
       return "close"

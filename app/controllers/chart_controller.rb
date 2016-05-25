@@ -2,9 +2,9 @@ class ChartController < ApplicationController
 	# require "google/api_client"
 	# require "google_drive"
 
-  @@opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, ENV['OPENING_HOUR'], ENV['OPENING_MIN'], 0)
+  @@opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 6, 0, 0)
 
-  @@closing_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, ENV['CLOSING_HOUR'], ENV['CLOSING_MIN'], 0)
+  @@closing_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 16, 0, 0)
 
 
   before_action :authenticate_user!
@@ -260,14 +260,16 @@ class ChartController < ApplicationController
 
 
   def market_moment(opening_time, closing_time)
-    if Time.now.utc > opening_time && Time.now.utc < closing_time - 5.minutes
+    Time.zone = "America/New_York"
+    if Time.zone.now > opening_time && Time.zone.now < closing_time - 5.minutes
       return "open"
-    elsif Time.now.utc >= closing_time - 5.minutes && Time.now.utc < closing_time
+    elsif Time.zone.now >= closing_time - 5.minutes && Time.now.utc < closing_time
       return "before_closing"
     else
       return "close"
     end
   end
+  
 
   def global_perf(array)
     perf = 0
