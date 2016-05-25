@@ -30,7 +30,8 @@ namespace :chart do
 
       puts "Done."
     else
-      puts "market close"
+      puts market_moment
+      puts Time.now.utc
     end
   end
 
