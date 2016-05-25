@@ -194,7 +194,14 @@
 
       pointSize: 2,
 
-      parseTime: false,
+      dateFormat: function (x) {
+        var date = new Date(x);
+        if (date.getMinutes() === 0) {
+          return date.getHours()+":00";
+        } else {
+          return date.getHours()+":"+date.getMinutes();
+        };
+      },
 
       // behaveLikeLine: true,
 

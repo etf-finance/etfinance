@@ -34,6 +34,43 @@ class Chart < ActiveRecord::Base
 	end
 
 
+	def redesign
+		self.default_values
+
+		date = self.created_at.to_date
+
+		symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+
+		quotes = Quote.where(symbol: symbols_array).where('created_at < ?', date + 1.days).where('created_at > ?', date)
+
+		index = 0
+
+		while index < quotes.size
+			array = []
+			quote = quotes[index]
+			array = [quote]
+			time = quote.round_time
+
+			index += 1
+			quote = quotes[index]
+
+			while quote.present? && quote.round_time == time
+				array << quote
+				index += 1
+				quote = quotes[index]
+			end
+
+			value = global_perf(array).round(2)
+			element = self.data.find{|x| x["value"]==nil }
+			element["value"] = value
+			# element["time"] = time
+
+		end
+
+		self.save
+	end
+
+
 	
 
 
@@ -66,67 +103,17 @@ class Chart < ActiveRecord::Base
 
 
 
+
   def default_values
-    self.data = [{:time=>" 6:00 AM", :value=>0},
-	 {:time=>" 6:10 AM", :value=>nil},
-	 {:time=>" 6:20 AM", :value=>nil},
-	 {:time=>" 6:30 AM", :value=>nil},
-	 {:time=>" 6:40 AM", :value=>nil},
-	 {:time=>" 6:50 AM", :value=>nil},
-	 {:time=>" 7:00 AM", :value=>nil},
-	 {:time=>" 7:10 AM", :value=>nil},
-	 {:time=>" 7:20 AM", :value=>nil},
-	 {:time=>" 7:30 AM", :value=>nil},
-	 {:time=>" 7:40 AM", :value=>nil},
-	 {:time=>" 7:50 AM", :value=>nil},
-	 {:time=>" 8:00 AM", :value=>nil},
-	 {:time=>" 8:10 AM", :value=>nil},
-	 {:time=>" 8:20 AM", :value=>nil},
-	 {:time=>" 8:30 AM", :value=>nil},
-	 {:time=>" 8:40 AM", :value=>nil},
-	 {:time=>" 8:50 AM", :value=>nil},
-	 {:time=>" 9:00 AM", :value=>nil},
-	 {:time=>" 9:10 AM", :value=>nil},
-	 {:time=>" 9:20 AM", :value=>nil},
-	 {:time=>" 9:30 AM", :value=>nil},
-	 {:time=>" 9:40 AM", :value=>nil},
-	 {:time=>" 9:50 AM", :value=>nil},
-	 {:time=>"10:00 AM", :value=>nil},
-	 {:time=>"10:10 AM", :value=>nil},
-	 {:time=>"10:20 AM", :value=>nil},
-	 {:time=>"10:30 AM", :value=>nil},
-	 {:time=>"10:40 AM", :value=>nil},
-	 {:time=>"10:50 AM", :value=>nil},
-	 {:time=>"11:00 AM", :value=>nil},
-	 {:time=>"11:10 AM", :value=>nil},
-	 {:time=>"11:20 AM", :value=>nil},
-	 {:time=>"11:30 AM", :value=>nil},
-	 {:time=>"11:40 AM", :value=>nil},
-	 {:time=>"11:50 AM", :value=>nil},
-	 {:time=>"12:00 PM", :value=>nil},
-	 {:time=>"12:10 PM", :value=>nil},
-	 {:time=>"12:20 PM", :value=>nil},
-	 {:time=>"12:30 PM", :value=>nil},
-	 {:time=>"12:40 PM", :value=>nil},
-	 {:time=>"12:50 PM", :value=>nil},
-	 {:time=>" 1:00 PM", :value=>nil},
-	 {:time=>" 1:10 PM", :value=>nil},
-	 {:time=>" 1:20 PM", :value=>nil},
-	 {:time=>" 1:30 PM", :value=>nil},
-	 {:time=>" 1:40 PM", :value=>nil},
-	 {:time=>" 1:50 PM", :value=>nil},
-	 {:time=>" 2:00 PM", :value=>nil},
-	 {:time=>" 2:10 PM", :value=>nil},
-	 {:time=>" 2:20 PM", :value=>nil},
-	 {:time=>" 2:30 PM", :value=>nil},
-	 {:time=>" 2:40 PM", :value=>nil},
-	 {:time=>" 2:50 PM", :value=>nil},
-	 {:time=>" 3:00 PM", :value=>nil},
-	 {:time=>" 3:10 PM", :value=>nil},
-	 {:time=>" 3:20 PM", :value=>nil},
-	 {:time=>" 3:30 PM", :value=>nil},
-	 {:time=>" 3:40 PM", :value=>nil},
-	 {:time=>" 3:50 PM", :value=>nil},
-	 {:time=>" 4:00 PM", :value=>nil}]
+    data = []
+    date = self.created_at.to_date
+    time = Time.new(date.year, date.month, date.day, 6, 0, 0)
+    data << {time: time, value: 0}
+    while time <= Time.new(date.year, date.month, date.day, 16, 0, 0)
+    	time += 10.minutes
+    	data << {time: time, value: nil}
+    end
+    self.data = data
+    self.save
   end
 end
