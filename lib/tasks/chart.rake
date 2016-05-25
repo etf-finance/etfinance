@@ -6,6 +6,7 @@ namespace :chart do
   task picking_quotes: :environment do
   # disable_active_record_logger    
     if market_moment == "open" && Time.now.to_date.cwday != 6 && Time.now.to_date.cwday != 7
+      Time.zone = "America/New_York"
       symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
       yahoo_client = YahooFinance::Client.new
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
@@ -25,7 +26,7 @@ namespace :chart do
       chart.save
       
       yahoo_data.each do |el|
-        Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value)
+        Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value, round_time: Time.zone.now.round_off(10.minutes))
       end
 
       puts "Done."
@@ -86,11 +87,6 @@ namespace :chart do
 
   def coef(x)
     Coefficient.where(symbol: x.symbol).where(expired: true).last.value
-  end
-
-
-  def round_off(t, seconds = 60)
-    Time.at((t.to_f / seconds).round * seconds).utc
   end
 
 
