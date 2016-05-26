@@ -46,28 +46,30 @@ class Chart < ActiveRecord::Base
 		index = 0
 
 		while index < quotes.size
-			array = []
+			quote_array = []
 			quote = quotes[index]
-			array = [quote]
+			quote_array = [quote]
 			time = quote.round_time
 
 			index += 1
 			quote = quotes[index]
 
 			while quote.present? && quote.round_time == time
-				array << quote
+				quote_array << quote
 				index += 1
 				quote = quotes[index]
 			end
 
-			value = global_perf(array).round(2)
-			element = self.data.find{|x| x["value"]==nil }
-			element["value"] = value
-
+			add_values_to_chart(self, quote_array)
 
 		end
 
 		self.save
+	end
+
+
+	def df
+		self.default_values
 	end
 
 
@@ -100,6 +102,22 @@ class Chart < ActiveRecord::Base
   def coef(x)
     Coefficient.where(symbol: x.symbol).last.value
   end
+
+
+  def add_values_to_chart(chart, quote_array)
+		 data = chart.data
+     element = data.find{|x| x["value"]==nil }
+     element["value"] = ((global_perf(quote_array)).round(2))
+     quote_array.each do |quote|
+        element[(quote.symbol.downcase+"_ask")] = quote.ask
+        element[(quote.symbol.downcase+"_bid")] = quote.bid
+      end
+      element["first_quote_id"] = quote_array.first.id
+      element["last_quote_id"] = quote_array.last.id
+      chart.data = data
+      chart.save
+      return data
+	end
 
 
 
