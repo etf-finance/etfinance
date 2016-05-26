@@ -128,7 +128,8 @@ class ChartController < ApplicationController
 
       element = @chart_data.find{|x| x["quotes_array"].present? }
 
-      @symbols_array = element["quotes_array"]
+      @symbols_array = element["quotes_array"] || ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+
 
       @premium = true
 
