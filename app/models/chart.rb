@@ -91,17 +91,13 @@ class Chart < ActiveRecord::Base
   end
 
   def perf(x)
-    coef(x)*diff(x)
+    x.coef*diff(x)
   end
 
   def diff(x)
     ((x.bid.to_f + x.ask.to_f)/2) - x.close.to_f
   end
 
-
-  def coef(x)
-    Coefficient.where(symbol: x.symbol).last.value
-  end
 
 
   def add_values_to_chart(chart, quote_array)

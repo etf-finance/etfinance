@@ -30,6 +30,8 @@ namespace :chart do
       quote_array.each do |quote|
         element[(quote.symbol.downcase+"_ask")] = quote.ask
         element[(quote.symbol.downcase+"_bid")] = quote.bid
+        element[(quote.symbol.downcase+"_close")] = quote.close
+        element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
       end
       element["first_quote_id"] = quote_array.first.id
       element["last_quote_id"] = quote_array.last.id
@@ -88,16 +90,11 @@ namespace :chart do
   end
 
   def perf(x)
-    coef(x)*diff(x)
+    x.coef*diff(x)
   end
 
   def diff(x)
     ((x.bid.to_f + x.ask.to_f)/2) - x.close.to_f
-  end
-
-
-  def coef(x)
-    Coefficient.where(symbol: x.symbol).where(expired: true).last.value
   end
 
 
