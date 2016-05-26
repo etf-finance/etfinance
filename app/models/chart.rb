@@ -110,6 +110,8 @@ class Chart < ActiveRecord::Base
       end
       element["first_quote_id"] = quote_array.first.id
       element["last_quote_id"] = quote_array.last.id
+      element[(quote.symbol.downcase+"_close")] = quote.close
+      element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
       chart.data = data
       chart.save
       return data
