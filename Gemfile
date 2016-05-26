@@ -30,6 +30,8 @@ gem "figaro"
 gem "chartkick"
 gem 'groupdate'
 
+gem 'pundit'
+
 gem 'stripe', '~> 1.41'
 
 gem 'gibbon', '~> 2.2'

@@ -7,7 +7,7 @@ namespace :chart do
   # disable_active_record_logger    
     if market_moment == "open" && Time.now.to_date.cwday != 6 && Time.now.to_date.cwday != 7
       Time.zone = "America/New_York"
-      symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV", "FB"]
+      symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
       yahoo_client = YahooFinance::Client.new
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
 

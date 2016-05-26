@@ -107,11 +107,11 @@ class Chart < ActiveRecord::Base
      quote_array.each do |quote|
         element[(quote.symbol.downcase+"_ask")] = quote.ask
         element[(quote.symbol.downcase+"_bid")] = quote.bid
+        element[(quote.symbol.downcase+"_close")] = quote.close
+      	element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
       end
       element["first_quote_id"] = quote_array.first.id
       element["last_quote_id"] = quote_array.last.id
-      element[(quote.symbol.downcase+"_close")] = quote.close
-      element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
       chart.data = data
       chart.save
       return data
