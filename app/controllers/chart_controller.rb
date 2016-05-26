@@ -113,7 +113,7 @@ class ChartController < ApplicationController
 
 
 
-    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+    # @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV", "AAPL"]
 
     @refreshing_time = @@closing_time.localtime - 5.minutes
 
@@ -123,6 +123,12 @@ class ChartController < ApplicationController
     if current_user.subscriber?
 
       @chart = Chart.last
+
+      @chart_data = @chart.data
+
+      element = @chart_data.find{|x| x["quotes_array"].present? }
+
+      @symbols_array = element["quotes_array"]
 
       @premium = true
 
@@ -171,7 +177,6 @@ class ChartController < ApplicationController
       @chart = Chart.last(4).first
     end
 
-    @chart_data = @chart.data
 
 
 

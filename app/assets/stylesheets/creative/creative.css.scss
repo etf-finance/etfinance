@@ -285,6 +285,14 @@ header .header-content .header-content-inner p {
     max-width: 400px;
 }
 
+// .service-box .text-primary:hover {
+//     color: pink !important;
+// }
+
+.service-box:hover{
+    color: $primary-color-dark !important;
+}
+
 @media(min-width:992px) {
     .service-box {
         margin: 20px auto 0;

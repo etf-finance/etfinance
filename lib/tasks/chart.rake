@@ -7,7 +7,7 @@ namespace :chart do
   # disable_active_record_logger    
     if market_moment == "open" && Time.now.to_date.cwday != 6 && Time.now.to_date.cwday != 7
       Time.zone = "America/New_York"
-      symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+      symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV", "FB"]
       yahoo_client = YahooFinance::Client.new
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
 
@@ -32,6 +32,7 @@ namespace :chart do
         element[(quote.symbol.downcase+"_bid")] = quote.bid
         element[(quote.symbol.downcase+"_close")] = quote.close
         element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
+        element["quotes_array"] = symbols_array
       end
       element["first_quote_id"] = quote_array.first.id
       element["last_quote_id"] = quote_array.last.id
