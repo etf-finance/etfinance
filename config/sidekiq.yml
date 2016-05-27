@@ -1,0 +1,6 @@
+:concurrency: <%= Integer(ENV["WORKER_CONCURRENCY"] || 3) %>
+:timeout: 60
+:verbose: <%= ENV['RAILS_ENV'] != 'production' %>
+:queues:
+ - default
+ - mailers
