@@ -97,8 +97,4 @@ gem 'autoprefixer-rails'
 
 gem 'faker', '~> 1.6', '>= 1.6.1'
 
-gem 'sidetiq'
-
-gem 'capistrano-sidekiq', github: 'seuros/capistrano-sidekiq'
-
 ruby "2.1.5"
