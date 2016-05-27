@@ -173,6 +173,7 @@ aside {
         color: $primary-color;
     }
 
+
     .navbar-default.affix .navbar-header .navbar-brand:hover,
     .navbar-default.affix .navbar-header .navbar-brand:focus {
         color: $focus-color;
@@ -700,4 +701,9 @@ th {
 
 .data-row {
     font-size: 11px;
+}
+
+#navbar-logo {
+    width: 90px;
+    margin-top: 5px;
 }
