@@ -101,4 +101,6 @@ gem 'sidetiq'
 
 gem 'capistrano-sidekiq', github: 'seuros/capistrano-sidekiq'
 
+gem 'sinatra', '~> 1.4', '>= 1.4.7'
+
 ruby "2.1.5"
