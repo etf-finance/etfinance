@@ -26,6 +26,11 @@ Rails.application.routes.draw do
 
   post "welcome/newsletter_subscription", to: "welcome#newsletter_subscription", as: :newsletter_subscription
 
+  require "sidekiq/web"
+    authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
 
 
   # Example of regular route:
