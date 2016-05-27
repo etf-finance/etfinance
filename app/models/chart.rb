@@ -110,6 +110,7 @@ class Chart < ActiveRecord::Base
         element[(quote.symbol.downcase+"_close")] = quote.close
       	element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
       end
+      element["time"] = quote_array.first.round_time
       element["first_quote_id"] = quote_array.first.id
       element["last_quote_id"] = quote_array.last.id
       chart.data = data
@@ -123,7 +124,7 @@ class Chart < ActiveRecord::Base
   def default_values
     data = []
     date = self.created_at.to_date
-    time = Time.new(date.year, date.month, date.day, 6, 0, 0)
+    time = Time.new(date.year, date.month, date.day, 10, 0, 0)
     data << {time: time, value: 0}
     while time <= Time.new(date.year, date.month, date.day, 16, 0, 0)
     	time += 10.minutes
