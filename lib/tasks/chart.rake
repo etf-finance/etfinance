@@ -34,6 +34,7 @@ namespace :chart do
         element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
         element["quotes_array"] = symbols_array
       end
+      element["time"] = quote_array.first.round_time
       element["first_quote_id"] = quote_array.first.id
       element["last_quote_id"] = quote_array.last.id
       chart.data = data

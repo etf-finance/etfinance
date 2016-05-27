@@ -126,7 +126,7 @@ class Chart < ActiveRecord::Base
     date = self.created_at.to_date
     time = Time.new(date.year, date.month, date.day, 10, 0, 0)
     data << {time: time, value: 0}
-    while time <= Time.new(date.year, date.month, date.day, 16, 0, 0)
+    while time <= Time.new(date.year, date.month, date.day, 20, 0, 0)
     	time += 10.minutes
     	data << {time: time, value: nil}
     end
