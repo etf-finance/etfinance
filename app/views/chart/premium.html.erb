@@ -101,8 +101,7 @@
                 <% @symbols_array.each do |symbol| %>
                   <% ask = el[symbol.downcase+"_ask"] %>
                   <% bid = el[symbol.downcase+"_bid"] %>
-                  <% condition = ask > 35 %>
-                  <td class><%= ask%></td>
+                  <td><%= ask%></td>
                   <td><%= bid%></td>
                 <% end %>
                 <td><%= el["first_quote_id"]%></td>

@@ -39,9 +39,9 @@ class Chart < ActiveRecord::Base
 
 		date = self.created_at.to_date
 
-		symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+		# symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
-		quotes = Quote.where(symbol: symbols_array).where('created_at < ?', date + 1.days).where('created_at > ?', date)
+		quotes = Quote.where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC')
 
 		index = 0
 
