@@ -11,40 +11,15 @@ namespace :chart do
       yahoo_client = YahooFinance::Client.new
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
 
-      quote_array = []
-      yahoo_data.each do |el|
-        quote = Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value, round_time: Time.zone.now.round_off(10.minutes))
-        quote_array << quote
-      end
+      quote_array = Quote.create_batch(yahoo_data)
 
+      chart = Chart.new_or_last
 
-      if Chart.last.present?
-        chart = (Chart.last.created_at.day == Time.now.day) ? Chart.last : Chart.create
-      else
-        chart = Chart.create
-      end
+      chart.populate(quote_array)
 
-      data = chart.data
-      element = data.find{|x| x["value"]==nil }
-      element["value"] = ((global_perf(quote_array)).round(2))
-      quote_array.each do |quote|
-        element[(quote.symbol.downcase+"_ask")] = quote.ask
-        element[(quote.symbol.downcase+"_bid")] = quote.bid
-        element[(quote.symbol.downcase+"_close")] = quote.close
-        element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
-        element["quotes_array"] = symbols_array
-      end
-      element["time"] = quote_array.first.round_time
-      element["first_quote_id"] = quote_array.first.id
-      element["last_quote_id"] = quote_array.last.id
-      chart.data = data
-      
+      chart.redesign
 
-      # chart.data << obj
-      chart.save
-      
-
-      puts "Done."
+      puts "populates from #{quote_array.first.id} to #{quote_array.last.id} : #{quote_array.size} valeurs "
     else
       puts market_moment
       puts Time.now.utc

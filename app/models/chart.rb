@@ -1,6 +1,15 @@
 class Chart < ActiveRecord::Base
 	after_create :default_values
 
+	def self.new_or_last
+		if Chart.last.present?
+      chart = (Chart.last.created_at.day == Time.now.day) ? Chart.last : Chart.create
+    else
+      chart = Chart.create
+    end
+    return chart
+	end
+
 
 
 	def recreate
@@ -39,8 +48,6 @@ class Chart < ActiveRecord::Base
 
 		date = self.created_at.to_date
 
-		# symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
-
 		quotes = Quote.where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC')
 
 		index = 0
@@ -60,7 +67,7 @@ class Chart < ActiveRecord::Base
 				quote = quotes[index]
 			end
 
-			add_values_to_chart(self, quote_array)
+			self.populate(quote_array)
 
 		end
 
@@ -68,15 +75,30 @@ class Chart < ActiveRecord::Base
 	end
 
 
-	def df
-		self.default_values
+	def populate(quote_array)
+		symbols_array = quote_array.map(&:symbol)
+		data = self.data
+	  element = data.find{|x| x["value"]==nil }
+	  element["value"] = ((quote_array.global_perf).round(2))
+	  quote_array.each do |quote|
+	    element[(quote.symbol.downcase+"_ask")] = quote.ask
+	    element[(quote.symbol.downcase+"_bid")] = quote.bid
+	    element[(quote.symbol.downcase+"_close")] = quote.close
+	    element[(quote.symbol.downcase+"_previous_close")] = quote.previous_close
+	    element["quotes_array"] = symbols_array
+	  end
+	  element["time"] = quote_array.first.round_time
+	  element["first_quote_id"] = quote_array.first.id
+	  element["last_quote_id"] = quote_array.last.id
+	  self.data = data
+	  self.save
+	  puts "populates from #{quote_array.first.id} to #{quote_array.last.id} : #{quote_array.size} valeurs "
 	end
 
 
+
+
 	
-
-
-
 
 
 

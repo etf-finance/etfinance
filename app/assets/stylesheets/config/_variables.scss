@@ -1,11 +1,11 @@
-$primary-color: hsla(231, 63%, 42%, 1);
-$primary-color-dark: hsla(231, 63%, 32%, 1);
+$primary-color: rgb(92, 155, 178);
+$primary-color-dark: rgb(92, 155, 178);
 $focus-color: hsla(hue($primary-color), saturation($primary-color)+1, lightness($primary-color)-10, alpha($primary-color));
 $border-btn-color: hsla(hue($primary-color)-1, saturation($primary-color), lightness($primary-color)-7, alpha($primary-color));
 $hover-btn-color: hsla(hue($primary-color)-1, saturation($primary-color), lightness($primary-color)-5, alpha($primary-color));
 $grey-color: rgba(33,33,33,.7);
-$white-color: #222;
+$white-color: white;
 $navbar-affix-color: #fff;
 $portfolio-caption: #fff;
 $text-faded-color: rgba(255,255,255,.7);
-$navbar-title-color: rgba(33,33,33,.7);
+$navbar-title-color: rgba(240,240,240, 1);

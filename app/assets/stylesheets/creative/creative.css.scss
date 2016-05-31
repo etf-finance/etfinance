@@ -7,9 +7,42 @@
  @import "config/variables";
 
 html,
+
+// .nav > li {
+//     height: 200px;
+// }
+
+
 body {
     width: 100%;
     height: 100%;
+}
+
+.service-box .fa {
+    font-size: 7em;
+}
+
+.arguments > h3 {
+    font-size: 26px;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+
+.affix img{
+    width: 110px;
+    margin-top: 5px;
+    -webkit-transition: all .25s;
+    -moz-transition: all .25s;
+    transition: all .25s;
+}
+
+.affix-top img {
+    width: 160px;
+    margin-top: 5px;
+    filter: brightness(500%);
+    -webkit-transition: all .25s;
+    -moz-transition: all .25s;
+    transition: all .25s;
 }
 
 body {
@@ -94,7 +127,7 @@ aside {
 }
 
 .navbar-default {
-    border-color: rgba(34,34,34,.05);
+    border-color: rgba(34,34,34,0);
     font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
     background-color: #fff;
     -webkit-transition: all .35s;
@@ -120,6 +153,7 @@ aside {
     font-size: 15px;
     font-weight: 700;
     color: #222;
+    padding-top: 20px;
 }
 
 .navbar-default .nav > li>a:hover,
@@ -130,7 +164,13 @@ aside {
 .navbar-default .nav > li.active>a,
 .navbar-default .nav>li.active>a:focus {
     color: $primary-color-dark !important;
+    // text-shadow: 1px 1px 1px #000000;
     background-color: transparent;
+}
+
+.navbar-default.affix-top .nav > li.active>a,
+.navbar-default.affix-top .nav>li.active>a:focus {
+    text-shadow: 1px 1px 1px #000000;
 }
 
 .navbar-default .nav > li.active>a:hover,
@@ -140,7 +180,7 @@ aside {
 
 @media(min-width:768px) {
     .navbar-default {
-        border-color: rgba(255,255,255,.3);
+        // border-color: rgba(255,255,255,.3);
         background-color: transparent;
     }
 
@@ -165,13 +205,14 @@ aside {
 
     .navbar-default.affix {
         border-color: rgba(34,34,34,.05);
-        background-color: $navbar-affix-color;
+        background-color: white;
     }
 
     .navbar-default.affix .navbar-header .navbar-brand {
         font-size: 20px;
         color: $primary-color;
     }
+
 
 
     .navbar-default.affix .navbar-header .navbar-brand:hover,
@@ -242,7 +283,7 @@ header .header-content .header-content-inner p {
 
 @media(min-width:768px) {
     header {
-        min-height: 110%;
+        min-height: 120%;
     }
 
     .small-header {
@@ -290,8 +331,8 @@ header .header-content .header-content-inner p {
 //     color: pink !important;
 // }
 
-.service-box:hover{
-    color: $primary-color-dark !important;
+.arguments:hover{
+    color: $focus-color;
 }
 
 @media(min-width:992px) {
@@ -438,6 +479,11 @@ fieldset[disabled] .btn-default.active {
     -moz-transition: all .35s;
     transition: all .35s;
 }
+
+.navbar .btn-primary {
+    height: 60px;
+}
+
 
 .btn-primary:hover,
 .btn-primary:focus,
@@ -703,7 +749,7 @@ th {
     font-size: 11px;
 }
 
-#navbar-logo {
-    width: 90px;
-    margin-top: 5px;
-}
+// #navbar-logo {
+//     width: 190px;
+//     margin-top: 5px;
+// }
