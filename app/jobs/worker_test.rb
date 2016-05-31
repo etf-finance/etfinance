@@ -14,14 +14,15 @@ class MyWorker
       quote_last_trade_date = DateTime.strptime(yahoo_data.first["last_trade_date"], "%m/%d/%Y").to_date
 
       # CHECK IF THERE IS TRADE TODAY
-      if quote_last_trade_date == Date.today
+      if true
+      # if quote_last_trade_date == Date.today
         chart = Chart.new_or_last
 
         quote_array = Quote.create_batch(yahoo_data)
 
         chart.populate(quote_array)
 
-        chart.redesign
+        # chart.redesign
 
         puts "New quotes and chart designed"
         
