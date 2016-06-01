@@ -36,6 +36,19 @@ namespace :chart do
 
 
 
+  desc "populate Quote model"
+  task both_quotes: :environment do
+  # disable_active_record_logger
+    symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+    yahoo_client = YahooFinance::Client.new
+    yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
+    Quote.create_batch(yahoo_data)
+    Quote.create_from_stock_quotes(symbols_array)
+    puts "from stock_quotes ok !!!!"
+  end
+
+
+
   desc "makes tomorrow_coef expired"
   task expired_coefficients: :environment do
   # disable_active_record_logger
