@@ -26,6 +26,14 @@ namespace :chart do
     end
   end
 
+  desc "populate Quote model"
+  task stock_quotes: :environment do
+  # disable_active_record_logger
+    symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+    Quote.create_from_stock_quotes
+    puts "from stock_quotes ok !!!!"
+  end
+
 
 
   desc "makes tomorrow_coef expired"
