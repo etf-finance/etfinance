@@ -2,7 +2,7 @@ class Quote < ActiveRecord::Base
 	def self.create_batch(yahoo_data)
 		quote_array = []
     yahoo_data.each do |el|
-      quote = Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value, round_time: Time.zone.now.round_off(5.minutes), source: "yahoo_finance_gem")
+      quote = Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f, coef: Coefficient.where(symbol: el.symbol).where(expired: true).last.value, round_time: Time.zone.now.round_off(10.minutes), source: "yahoo_finance_gem")
       quote_array << quote
     end
     return quote_array
@@ -12,7 +12,7 @@ class Quote < ActiveRecord::Base
     stocks = StockQuote::Stock.json_quote(symbols_array)["quote"]
 
     stocks.each do |stock|
-      Quote.create(source: "stock_quote", symbol: stock["symbol"], ask: stock["Ask"].to_f, bid: stock["Bid"].to_f, previous_close: stock["PreviousClose"].to_f, stock_quote_data: stock, round_time: Time.zone.now.round_off(5.minutes), coef: Coefficient.where(symbol: stock["symbol"]).where(expired: true).last.value)
+      Quote.create(source: "stock_quote", symbol: stock["symbol"], ask: stock["Ask"].to_f, bid: stock["Bid"].to_f, previous_close: stock["PreviousClose"].to_f, stock_quote_data: stock, round_time: Time.zone.now.round_off(10.minutes), coef: Coefficient.where(symbol: stock["symbol"]).where(expired: true).last.value)
     end
   end
 
