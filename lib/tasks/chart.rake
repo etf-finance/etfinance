@@ -30,7 +30,7 @@ namespace :chart do
   task stock_quotes: :environment do
   # disable_active_record_logger
     symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
-    Quote.create_from_stock_quotes
+    Quote.create_from_stock_quotes(symbols_array)
     puts "from stock_quotes ok !!!!"
   end
 
