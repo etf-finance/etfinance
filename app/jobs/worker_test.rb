@@ -13,6 +13,13 @@ class MyWorker
       yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
       quote_last_trade_date = DateTime.strptime(yahoo_data.first["last_trade_date"], "%m/%d/%Y").to_date
 
+
+      stocks = StockQuote::Stock.json_quote(symbols_array)
+
+      stocks.each do |stock|
+        Quote.create(source: "stock_quote", symbol: stock["symbol"], ask: stock["Ask"].to_f, bid: stock["Bid"].to_f, previous_close: stock["PreviousClose"].to_f, stock_quote_data: stock, round_time: Time.zone.now.round_off(5.minutes), coef: Coefficient.where(symbol: stock["symbol"]).where(expired: true).last.value)
+      end
+
       # CHECK IF THERE IS TRADE TODAY
       if true
       # if quote_last_trade_date == Date.today
