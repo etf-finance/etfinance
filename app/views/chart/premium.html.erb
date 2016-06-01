@@ -49,7 +49,7 @@
           <tr>
             <% ask = Quote.where(symbol: symbol).last.ask %>
             <% bid = Quote.where(symbol: symbol).last.bid %>
-            <% close = Quote.where(symbol: symbol).last.close %>
+            <% close = Quote.where(symbol: symbol).last.previous_close %>
             <% coefficient = Coefficient.where(symbol: symbol).where(expired: true).last.value %>
             <td><%= symbol %></td>
             <td><%= ask %></td>
