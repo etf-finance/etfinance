@@ -216,6 +216,28 @@ class ChartController < ApplicationController
 
 
 
+  def all_quotes
+
+    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+
+    date = Date.today
+
+    @symbols_array.each do |symbol|
+      instance_variable_set("@"+symbol.downcase+"_array", symbol_to_ask_graph(symbol))
+    end
+
+
+    # @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV", "AAPL"]
+
+    @refreshing_time = @@closing_time.localtime - 5.minutes
+
+    @perf_class = "active active-btn"
+    @futures_class = "inactive"
+
+  end
+
+
+
   def basic
 
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
@@ -314,13 +336,35 @@ class ChartController < ApplicationController
     return quote
   end
 
+  def symbol_to_ask_graph(symbol)
+    date = Date.today
 
+    quotes = Quote.where(symbol: symbol).where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC')
 
+    hash = quotes.group_by { |i| i.round_time}
 
+    array = hash.values
 
+    array_for_graph = []
 
-
+    array.each do |el|
+      h = {}
+      h["time"] = el.first.round_time
+      el.each do |q|
+        source = q.source
+        h["ask_"+source] = q.ask
+      end
+      array_for_graph << h
+    end
+    return array_for_graph
+  end
 
 
 
 end
+
+
+
+
+
+

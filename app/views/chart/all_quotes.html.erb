@@ -1,0 +1,113 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
+
+<div class="container-devise">
+  <div class="container">
+  <h1>Test de graph</h1>
+    <%= render partial: "links" %>
+
+
+
+    <% @symbols_array.each do |symbol| %>
+      <h3><%= symbol%></h3>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="perf-graph">
+            <%= content_tag :div, "", id: symbol.downcase+"_chart", data: {section: instance_variable_get("@"+symbol.downcase+"_array")}, class: "chart" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+  </div>
+  
+</div>
+
+
+<script>
+
+
+
+    $(document).ready(function() {
+        barChart("spy");
+        barChart("vxx");
+        barChart("vxz");
+        barChart("xiv");
+        barChart("ziv");
+
+    });
+
+
+
+    function barChart(symbol) {
+
+        var array = [];
+
+        var data = $('#'+symbol+'_chart').data('section');
+
+        for (i in data) {
+          array.push(data[i].ask_yahoo_finance_gem)
+        };
+
+        var min = Math.floor(Math.min(...array));
+
+        var max = Math.ceil(Math.max(...array));
+
+        var mainColor = $('.nav-pills > li.active > a').css("background-color");
+
+
+
+      Morris.Line({
+      // ID of the element in which to draw the chart.
+      element: symbol+'_chart',
+      // Chart data records -- each entry in this array corresponds to a point on
+      // the chart.
+      data: $('#'+symbol+'_chart').data('section'),
+      // The name of the data record attribute that contains x-values.
+      xkey: 'time',
+      // A list of names of data record attributes that contain y-values.
+      ykeys: ['ask_yahoo_finance_gem', 'ask_stock_quote'],
+
+      resize: true,
+
+      lineWidth: 2,
+
+      pointSize: 2,
+
+      dateFormat: function (x) {
+        var date = new Date(x);
+        if (date.getMinutes() === 0) {
+          return date.getHours()+":00";
+        } else {
+          return date.getHours()+":"+date.getMinutes();
+        };
+      },
+
+      // behaveLikeLine: true,
+
+      fillOpacity: 0.2,
+
+      goals: [0],
+
+      goalStrokeWidth: 3,
+
+      lineColors: ["#FF0000", mainColor],
+
+      goalLineColors: ['#C73B04'],
+
+      // ymin: -100,
+      // ymax: 100,
+
+      ymin: min,
+      ymax: max,
+
+      labels: ['YF', 'SQ']
+    });
+  }
+
+</script>
+
+
+

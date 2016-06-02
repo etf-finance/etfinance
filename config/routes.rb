@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   get 'chart/premium'
 
+  get 'chart/all_quotes'
+
   get 'chart/new_coef'
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
