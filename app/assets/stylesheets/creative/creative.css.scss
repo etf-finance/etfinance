@@ -589,13 +589,17 @@ body {
     // height: 100vh;
     // min-height: 600px;
     padding-top:150px;
-    h2, h3{
-        color: $white-color;
+    h1, h2, h3{
+        color: #777;
         text-align: left;
         margin-bottom: 50px;
     }
     p {
         text-align: left;
+    }
+
+    h1 {
+        font-size: 26px !important;
     }
 }
     
@@ -603,7 +607,7 @@ body {
     font-family: arial !important;
     z-index: 3;
     position: fixed;
-    top: 51px;
+    top: 60px;
     left: 0;
     width: 100%;
     padding-top: 15px;
