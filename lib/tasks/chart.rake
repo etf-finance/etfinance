@@ -41,7 +41,7 @@ namespace :chart do
   # disable_active_record_logger
     symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
     yahoo_client = YahooFinance::Client.new
-    yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close, :last_trade_price])
+    yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close, :last_trade_time])
     Quote.create_batch(yahoo_data)
     Quote.create_from_stock_quotes(symbols_array)
     puts "from stock_quotes ok !!!!"
