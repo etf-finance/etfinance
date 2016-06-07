@@ -68,13 +68,19 @@
       // The name of the data record attribute that contains x-values.
       xkey: 'time',
       // A list of names of data record attributes that contain y-values.
-      ykeys: ['ask_yahoo_finance_gem', 'ask_stock_quote'],
+      ykeys: ['ask_yahoo_finance_gem'],
 
       resize: true,
 
       lineWidth: 2,
 
       pointSize: 2,
+
+      hoverCallback: function (index, options, content, row) {
+        return "Last Trade Time : " +row.last_trade_time_yahoo_finance_gem + content;
+      },
+
+
 
       dateFormat: function (x) {
         var date = new Date(x);
@@ -93,7 +99,7 @@
 
       goalStrokeWidth: 3,
 
-      lineColors: ["#FF0000", mainColor],
+      lineColors: ["#FF0000"],
 
       goalLineColors: ['#C73B04'],
 
@@ -103,7 +109,7 @@
       ymin: min,
       ymax: max,
 
-      labels: ['YF', 'SQ']
+      labels: ['YF']
     });
   }
 

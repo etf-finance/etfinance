@@ -337,7 +337,7 @@ class ChartController < ApplicationController
   end
 
   def symbol_to_ask_graph(symbol)
-    date = Date.today
+    date = Date.today - 1.days
 
     quotes = Quote.where(symbol: symbol).where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC')
 
@@ -353,6 +353,7 @@ class ChartController < ApplicationController
       el.each do |q|
         source = q.source
         h["ask_"+source] = q.ask
+        h["last_trade_time_"+source] = q.last_trade_time
       end
       array_for_graph << h
     end
