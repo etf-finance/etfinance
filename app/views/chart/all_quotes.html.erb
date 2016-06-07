@@ -61,6 +61,8 @@
 
         for (i in data) {
           array.push(data[i].ask_yahoo_finance_gem)
+          array.push(data[i].bid_yahoo_finance_gem)
+          array.push(data[i].previous_close_yahoo_finance_gem)
         };
 
         var min = Math.floor(Math.min(...array));
