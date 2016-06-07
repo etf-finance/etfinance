@@ -220,10 +220,12 @@ class ChartController < ApplicationController
 
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
-    date = Date.today
+    days = params[:days].to_i || 0
+
+    date = Date.today - days.days
 
     @symbols_array.each do |symbol|
-      instance_variable_set("@"+symbol.downcase+"_array", symbol_to_ask_graph(symbol))
+      instance_variable_set("@"+symbol.downcase+"_array", symbol_to_ask_graph(symbol, date))
     end
 
 
@@ -336,8 +338,7 @@ class ChartController < ApplicationController
     return quote
   end
 
-  def symbol_to_ask_graph(symbol)
-    date = Date.today - 1.days
+  def symbol_to_ask_graph(symbol, date)
 
     quotes = Quote.where(symbol: symbol).where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC')
 
