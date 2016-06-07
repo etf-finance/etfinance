@@ -18,7 +18,7 @@ class Quote < ActiveRecord::Base
 
 
 	def diff
-   	((self.bid + self.ask)/2) - self.close
+   	((self.bid + self.ask)/2) - self.previous_close
   end
 
   def perf

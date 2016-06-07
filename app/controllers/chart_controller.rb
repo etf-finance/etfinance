@@ -224,6 +224,18 @@ class ChartController < ApplicationController
 
     date = Date.today - days.days
 
+    quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').to_a
+
+    quotes_batched = quotes.batching
+
+    @chart_data = Array.new
+
+    quotes_batched.each do |array|
+      @chart_data << array.batch_to_data
+    end
+
+
+
     @symbols_array.each do |symbol|
       instance_variable_set("@"+symbol.downcase+"_array", symbol_to_ask_graph(symbol, date))
     end
@@ -283,12 +295,11 @@ class ChartController < ApplicationController
   end
 
 
-  def new_coef
-    
-  end
-
-
   private
+
+  def perf_data(array)
+
+  end
 
 
 
@@ -305,38 +316,38 @@ class ChartController < ApplicationController
   end
   
 
-  def global_perf(array)
-    perf = 0
-    array.each do |el|
-      perf += perf(el)
-    end
-    return perf
-  end
+  # def global_perf(array)
+  #   perf = 0
+  #   array.each do |el|
+  #     perf += perf(el)
+  #   end
+  #   return perf
+  # end
 
-  def perf(x)
-    coef(x)*diff(x)
-  end
+  # def perf(x)
+  #   coef(x)*diff(x)
+  # end
 
-  def diff(x)
-    ((x.bid.to_f + x.ask.to_f)/2) - x.close.to_f
-  end
-
-
-  def coef(x)
-    Coefficient.where(symbol: x.symbol).last.value
-  end
+  # def diff(x)
+  #   ((x.bid.to_f + x.ask.to_f)/2) - x.close.to_f
+  # end
 
 
-  def yahoo_to_db(array)
-    array.each do |el|
-      Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f)
-    end
-  end
+  # def coef(x)
+  #   Coefficient.where(symbol: x.symbol).last.value
+  # end
 
-  def os_to_db(object)
-    quote = Quote.create(symbol: object.symbol, bid: object.bid.to_f, ask: object.ask.to_f, close: object.close.to_f, previous_close: object.previous_close.to_f)
-    return quote
-  end
+
+  # def yahoo_to_db(array)
+  #   array.each do |el|
+  #     Quote.create(symbol: el.symbol, bid: el.bid.to_f, ask: el.ask.to_f, close: el.close.to_f, previous_close: el.previous_close.to_f)
+  #   end
+  # end
+
+  # def os_to_db(object)
+  #   quote = Quote.create(symbol: object.symbol, bid: object.bid.to_f, ask: object.ask.to_f, close: object.close.to_f, previous_close: object.previous_close.to_f)
+  #   return quote
+  # end
 
   def symbol_to_ask_graph(symbol, date)
 
@@ -354,6 +365,8 @@ class ChartController < ApplicationController
       el.each do |q|
         source = q.source
         h["ask_"+source] = q.ask
+        h["bid_"+source] = q.bid
+        h["previous_close_"+source] = q.previous_close
         h["last_trade_time_"+source] = q.last_trade_time
       end
       array_for_graph << h

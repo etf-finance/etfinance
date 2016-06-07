@@ -21,6 +21,16 @@
       </div>
       <hr>
     <% end %>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="perf-graph">
+          <%= content_tag :div, "", id: "perf_chart", data: {section:@chart_data}, class: "chart" %>
+        </div>
+        
+      </div>
+    </div>
+    <hr>
     
   </div>
   
@@ -37,6 +47,7 @@
         barChart("vxz");
         barChart("xiv");
         barChart("ziv");
+        perfChart();
 
     });
 
@@ -69,7 +80,7 @@
       // The name of the data record attribute that contains x-values.
       xkey: 'time',
       // A list of names of data record attributes that contain y-values.
-      ykeys: ['ask_yahoo_finance_gem'],
+      ykeys: ['ask_yahoo_finance_gem', 'bid_yahoo_finance_gem', 'previous_close_yahoo_finance_gem'],
 
       resize: true,
 
@@ -100,7 +111,7 @@
 
       goalStrokeWidth: 3,
 
-      lineColors: ["#FF0000"],
+      lineColors: ["#FF0000", mainColor, "#707070"],
 
       goalLineColors: ['#C73B04'],
 
@@ -110,7 +121,83 @@
       ymin: min,
       ymax: max,
 
-      labels: ['YF']
+      labels: ['ASK', 'BID', "Previous Close"]
+    });
+  }
+
+
+    function perfChart() {
+
+        var array = [];
+
+        var data = $('#perf_chart').data('section');
+
+        for (i in data) {
+          array.push(data[i].value)
+        };
+
+        var min = Math.floor(Math.min(...array));
+
+        var max = Math.ceil(Math.max(...array));
+
+        var dif = max - min
+
+        var mainColor = $('.nav-pills > li.active > a').css("background-color");
+
+        
+
+        if ((dif % 4) === 1) {
+          max = max + 1 ;
+        } else if ((dif % 4) === 3) {
+          max = max + 2 ;
+          min = min - 1 ;
+        }
+
+      Morris.Line({
+      // ID of the element in which to draw the chart.
+      element: 'perf_chart',
+      // Chart data records -- each entry in this array corresponds to a point on
+      // the chart.
+      data: $('#perf_chart').data('section'),
+      // The name of the data record attribute that contains x-values.
+      xkey: 'time',
+      // A list of names of data record attributes that contain y-values.
+      ykeys: ['value'],
+
+      resize: true,
+
+      lineWidth: 2,
+
+      pointSize: 2,
+
+      dateFormat: function (x) {
+        var date = new Date(x);
+        if (date.getMinutes() === 0) {
+          return date.getHours()+":00";
+        } else {
+          return date.getHours()+":"+date.getMinutes();
+        };
+      },
+
+      // behaveLikeLine: true,
+
+      fillOpacity: 0.2,
+
+      goals: [0],
+
+      goalStrokeWidth: 3,
+
+      lineColors: [mainColor],
+
+      goalLineColors: ['#C73B04'],
+
+      // ymin: -100,
+      // ymax: 100,
+
+      ymin: min,
+      ymax: max,
+
+      labels: ['Value']
     });
   }
 
