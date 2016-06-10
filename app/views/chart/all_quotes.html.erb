@@ -55,14 +55,66 @@
 
     function barChart(symbol) {
 
+        var date_array = [];
+
+        var data = $('#section_chart').data('section');
+
+          // for (i in data) {
+          //   array.push(data[i].value);
+          //   date_array.push(data[i].date);
+
+          // };
+
         var array = [];
 
         var data = $('#'+symbol+'_chart').data('section');
 
+        var last_trade_time = "4:00pm" ;
+
+        var bid = "" ;
+
+        var previous_bid_status = "open";
+
+        var previous_market_status = "open" ; 
+
+        var previous_close = "" ;
+
+        // var market_status = ""
+
         for (i in data) {
-          array.push(data[i].ask_yahoo_finance_gem)
-          array.push(data[i].bid_yahoo_finance_gem)
-          array.push(data[i].previous_close_yahoo_finance_gem)
+          array.push(data[i].ask_yahoo_finance_gem);
+          array.push(data[i].bid_yahoo_finance_gem);
+          array.push(data[i].previous_close_yahoo_finance_gem);
+
+          if (data[i].last_trade_time_yahoo_finance_gem === last_trade_time) {
+            market_status = "close"
+          } else {
+            market_status = "open"
+          } ;
+
+          if (data[i].bid_yahoo_finance_gem === bid) {
+            bid_status = "close"
+          } else {
+            bid_status = "open"
+          } ;
+
+          if (data[i].previous_close_yahoo_finance_gem !== previous_close) {
+            date_array.push(data[i].time);
+          }
+
+          if ((market_status !== previous_market_status) ) {
+            date_array.push(data[i].time)
+          };
+
+          previous_market_status = market_status ;
+
+          previous_bid_status = bid_status ;
+
+          bid =  data[i].bid_yahoo_finance_gem ;
+
+          last_trade_time = data[i].last_trade_time_yahoo_finance_gem ;
+
+          previous_close = data[i].previous_close_yahoo_finance_gem ;
         };
 
         var min = Math.floor(Math.min(...array));
@@ -116,6 +168,10 @@
       lineColors: ["#FF0000", mainColor, "#707070"],
 
       goalLineColors: ['#C73B04'],
+
+      events: date_array,
+
+      eventLineColors: ["#788687"],
 
       // ymin: -100,
       // ymax: 100,
