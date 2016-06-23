@@ -218,13 +218,15 @@ class ChartController < ApplicationController
 
   def all_quotes
 
+    Time.zone = "America/New_York"
+
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
     days = params[:days].to_i || 0
 
     date = Date.today - days.days
 
-    quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: "4:00pm").to_a
+    quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
 
     quotes_batched = quotes.batching
 
@@ -247,6 +249,7 @@ class ChartController < ApplicationController
 
     @perf_class = "active active-btn"
     @futures_class = "inactive"
+
 
   end
 

@@ -46,7 +46,7 @@ class Array
   def batch_to_data
     element = Hash.new
     element["value"] = ((self.global_perf).round(2))
-    element["time"] = self.first.trade_time
+    element["time"] = self.first.rounded_trade_time
     element["first_quote_id"] = self.first.id
     element["last_quote_id"] = self.last.id
     return element

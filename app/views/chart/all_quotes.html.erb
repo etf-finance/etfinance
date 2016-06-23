@@ -1,5 +1,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- <script src="moment.js"></script>
+<script src="moment-timezone-with-data.js"></script> -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
 
@@ -229,11 +231,16 @@
       pointSize: 2,
 
       dateFormat: function (x) {
+        return "";
+      },
+
+
+      xLabelFormat: function (x) {
         var date = new Date(x);
         if (date.getMinutes() === 0) {
-          return date.getHours()+":00";
+          return date.getUTCHours()+":00";
         } else {
-          return date.getHours()+":"+date.getMinutes();
+          return date.getUTCHours()+":"+date.getMinutes();
         };
       },
 
