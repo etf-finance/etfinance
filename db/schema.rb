@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160602140401) do
+ActiveRecord::Schema.define(version: 20160622193857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20160602140401) do
     t.json     "stock_quote_data"
     t.string   "source"
     t.string   "last_trade_time"
+    t.datetime "trade_time"
   end
 
   create_table "users", force: :cascade do |t|

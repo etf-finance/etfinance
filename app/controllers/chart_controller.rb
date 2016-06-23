@@ -351,25 +351,24 @@ class ChartController < ApplicationController
 
   def symbol_to_ask_graph(symbol, date)
 
-    quotes = Quote.where(symbol: symbol).where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC')
+    quotes = Quote.where(symbol: symbol).where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where(source: "yahoo_finance_gem")
 
     hash = quotes.group_by { |i| i.round_time}
 
-    array = hash.values
+    array = hash.values.flatten
 
     array_for_graph = []
 
-    array.each do |el|
-      h = {}
-      h["time"] = el.first.round_time
-      el.each do |q|
-        source = q.source
-        h["ask_"+source] = q.ask
-        h["bid_"+source] = q.bid
-        h["previous_close_"+source] = q.previous_close
-        h["last_trade_time_"+source] = q.last_trade_time
+    array.each do |quote|
+      unless quote.last_trade_time == "4:00pm"
+        h = {}
+        h["time"] = quote.round_time
+        h["ask"] = quote.ask
+        h["bid"] = quote.bid
+        h["previous_close"] = quote.previous_close
+        h["last_trade_time"] = quote.last_trade_time
+        array_for_graph << h
       end
-      array_for_graph << h
     end
     return array_for_graph
   end
