@@ -224,7 +224,7 @@ class ChartController < ApplicationController
 
     date = Date.today - days.days
 
-    quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').to_a
+    quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: "4:00pm").to_a
 
     quotes_batched = quotes.batching
 
@@ -367,6 +367,7 @@ class ChartController < ApplicationController
         h["bid"] = quote.bid
         h["previous_close"] = quote.previous_close
         h["last_trade_time"] = quote.last_trade_time
+        h["created_at"] = quote.created_at.strftime("%l:%M %p")
         array_for_graph << h
       end
     end
