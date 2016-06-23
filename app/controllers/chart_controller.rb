@@ -360,7 +360,7 @@ class ChartController < ApplicationController
     array_for_graph = []
 
     array.each do |quote|
-      unless quote.last_trade_time == "4:00pm"
+      unless quote.last_trade_time == "4:00pm" || quote.last_trade_time == "3:59pm"
         h = {}
         h["time"] = quote.round_time
         h["ask"] = quote.ask
