@@ -18,7 +18,7 @@
 
     <h2>Live quotations</h2>
     <div class="row perf-graph">
-      <% @sections_array.each do |quote| %>
+      <% @yahoo_charts.each do |quote| %>
         <div class="col-md-4 col-sm-6 col-xs-12 yahoo-chart">
           <%= image_tag("http://chart.finance.yahoo.com/z?s=#{quote}&t=1d", :alt => "rss feed") %>
         </div>

@@ -50,6 +50,10 @@ class ChartController < ApplicationController
       @date_array << @date_array.last + 1.months
     end
 
+    @yahoo_charts = @sections_array << 'VIX'
+
+    @yahoo_charts << '^GSPC'
+
 
 
 
@@ -224,9 +228,16 @@ class ChartController < ApplicationController
 
     days = params[:days].to_i || 0
 
-    date = Date.today - days.days
+    days = 0
+    quotes = []
 
-    quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
+    while quotes.size == 0
+      date = Date.today - days.days
+      quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
+      if quotes.size == 0
+        days += 1
+      end
+    end
 
     quotes_batched = quotes.batching
 
@@ -235,6 +246,12 @@ class ChartController < ApplicationController
     quotes_batched.each do |array|
       @chart_data << array.batch_to_data
     end
+
+    string = date.strftime("%m/%d/%Y")
+    string_time = string + " 4:00pm"
+    closing_time = DateTime.strptime(string_time, "%m/%d/%Y %l:%M%P")
+
+    @chart_data << {round_time: closing_time}
 
 
 
