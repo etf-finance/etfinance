@@ -24,4 +24,12 @@ class Quote < ActiveRecord::Base
   def perf
     self.coef*self.diff
   end
+
+  def rounded_trade_time
+    date = self.created_at.to_date
+    string = date.strftime("%m/%d/%Y")
+    string_time = string + " "+self.last_trade_time
+    trade_time = DateTime.strptime(string_time, "%m/%d/%Y %l:%M%P")
+    return trade_time
+  end
 end

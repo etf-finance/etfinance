@@ -1,5 +1,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- <script src="moment.js"></script>
+<script src="moment-timezone-with-data.js"></script> -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
 
@@ -82,23 +84,23 @@
         // var market_status = ""
 
         for (i in data) {
-          array.push(data[i].ask_yahoo_finance_gem);
-          array.push(data[i].bid_yahoo_finance_gem);
-          array.push(data[i].previous_close_yahoo_finance_gem);
+          array.push(data[i].ask);
+          array.push(data[i].bid);
+          array.push(data[i].previous_close);
 
-          if (data[i].last_trade_time_yahoo_finance_gem === last_trade_time) {
+          if (data[i].last_trade_time === last_trade_time) {
             market_status = "close"
           } else {
             market_status = "open"
           } ;
 
-          if (data[i].bid_yahoo_finance_gem === bid) {
+          if (data[i].bid === bid) {
             bid_status = "close"
           } else {
             bid_status = "open"
           } ;
 
-          if (data[i].previous_close_yahoo_finance_gem !== previous_close) {
+          if (data[i].previous_close !== previous_close) {
             date_array.push(data[i].time);
           }
 
@@ -110,11 +112,11 @@
 
           previous_bid_status = bid_status ;
 
-          bid =  data[i].bid_yahoo_finance_gem ;
+          bid =  data[i].bid ;
 
-          last_trade_time = data[i].last_trade_time_yahoo_finance_gem ;
+          last_trade_time = data[i].last_trade_time ;
 
-          previous_close = data[i].previous_close_yahoo_finance_gem ;
+          previous_close = data[i].previous_close ;
         };
 
         var min = Math.floor(Math.min(...array));
@@ -134,7 +136,7 @@
       // The name of the data record attribute that contains x-values.
       xkey: 'time',
       // A list of names of data record attributes that contain y-values.
-      ykeys: ['ask_yahoo_finance_gem', 'bid_yahoo_finance_gem', 'previous_close_yahoo_finance_gem'],
+      ykeys: ['ask', 'bid', 'previous_close'],
 
       resize: true,
 
@@ -143,7 +145,7 @@
       pointSize: 2,
 
       hoverCallback: function (index, options, content, row) {
-        return "Last Trade Time : " +row.last_trade_time_yahoo_finance_gem + content;
+        return "Last Trade Time : " +row.last_trade_time + content + "Created At :"+row.created_at;
       },
 
 
@@ -203,13 +205,17 @@
         var mainColor = $('.nav-pills > li.active > a').css("background-color");
 
         
-
-        if ((dif % 4) === 1) {
-          max = max + 1 ;
-        } else if ((dif % 4) === 3) {
-          max = max + 2 ;
-          min = min - 1 ;
-        }
+        // min = -3
+        // if ((dif % 4) === 1) {
+        //   max = max + 1 ;
+        // } else if ((dif % 4) === 3) {
+        //   max = max + 2 ;
+        //   if (min < 0) {
+        //     min = min -1 ;
+        //   } else {
+        //     min = -1
+        //   }
+        // }
 
       Morris.Line({
       // ID of the element in which to draw the chart.
@@ -218,22 +224,34 @@
       // the chart.
       data: $('#perf_chart').data('section'),
       // The name of the data record attribute that contains x-values.
-      xkey: 'time',
+      xkey: 'round_time',
       // A list of names of data record attributes that contain y-values.
-      ykeys: ['value'],
+      ykeys: ['value', 'spy_pnl','vxx_pnl','vxz_pnl','xiv_pnl','ziv_pnl'],
 
       resize: true,
 
-      lineWidth: 2,
+      lineWidth: [3,1,1,1,1,1],
 
-      pointSize: 2,
+      pointSize: [3,1,1,1,1,1],
 
       dateFormat: function (x) {
         var date = new Date(x);
         if (date.getMinutes() === 0) {
-          return date.getHours()+":00";
+          return date.getUTCHours()+":00";
         } else {
-          return date.getHours()+":"+date.getMinutes();
+          return date.getUTCHours()+":"+date.getMinutes();
+        };
+      },
+
+      xLabels: "30min",
+
+
+      xLabelFormat: function (x) {
+        var date = new Date(x);
+        if (date.getMinutes() === 0) {
+          return date.getUTCHours()+":00";
+        } else {
+          return date.getUTCHours()+":"+date.getMinutes();
         };
       },
 
@@ -245,17 +263,17 @@
 
       goalStrokeWidth: 3,
 
-      lineColors: [mainColor],
+      // lineColors: [mainColor],
 
       goalLineColors: ['#C73B04'],
 
       // ymin: -100,
       // ymax: 100,
 
-      ymin: min,
-      ymax: max,
+      // ymin: min,
+      // ymax: max,
 
-      labels: ['Value']
+      labels: ['PNL', 'SPY', 'VXX', 'VXZ', 'XIV', 'ZIV']
     });
   }
 

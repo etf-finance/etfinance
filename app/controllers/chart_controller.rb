@@ -50,6 +50,10 @@ class ChartController < ApplicationController
       @date_array << @date_array.last + 1.months
     end
 
+    @yahoo_charts = @sections_array << 'VIX'
+
+    @yahoo_charts << '^GSPC'
+
 
 
 
@@ -218,13 +222,22 @@ class ChartController < ApplicationController
 
   def all_quotes
 
+    Time.zone = "America/New_York"
+
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
     days = params[:days].to_i || 0
 
-    date = Date.today - days.days
+    days = 0
+    quotes = []
 
-    quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').to_a
+    while quotes.size == 0
+      date = Date.today - days.days
+      quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
+      if quotes.size == 0
+        days += 1
+      end
+    end
 
     quotes_batched = quotes.batching
 
@@ -233,6 +246,12 @@ class ChartController < ApplicationController
     quotes_batched.each do |array|
       @chart_data << array.batch_to_data
     end
+
+    string = date.strftime("%m/%d/%Y")
+    string_time = string + " 4:00pm"
+    closing_time = DateTime.strptime(string_time, "%m/%d/%Y %l:%M%P")
+
+    @chart_data << {round_time: closing_time}
 
 
 
@@ -247,6 +266,7 @@ class ChartController < ApplicationController
 
     @perf_class = "active active-btn"
     @futures_class = "inactive"
+
 
   end
 
@@ -351,25 +371,25 @@ class ChartController < ApplicationController
 
   def symbol_to_ask_graph(symbol, date)
 
-    quotes = Quote.where(symbol: symbol).where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC')
+    quotes = Quote.where(symbol: symbol).where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where(source: "yahoo_finance_gem")
 
     hash = quotes.group_by { |i| i.round_time}
 
-    array = hash.values
+    array = hash.values.flatten
 
     array_for_graph = []
 
-    array.each do |el|
-      h = {}
-      h["time"] = el.first.round_time
-      el.each do |q|
-        source = q.source
-        h["ask_"+source] = q.ask
-        h["bid_"+source] = q.bid
-        h["previous_close_"+source] = q.previous_close
-        h["last_trade_time_"+source] = q.last_trade_time
+    array.each do |quote|
+      unless quote.last_trade_time == "4:00pm" || quote.last_trade_time == "3:59pm"
+        h = {}
+        h["time"] = quote.round_time
+        h["ask"] = quote.ask
+        h["bid"] = quote.bid
+        h["previous_close"] = quote.previous_close
+        h["last_trade_time"] = quote.last_trade_time
+        h["created_at"] = quote.created_at.strftime("%l:%M %p")
+        array_for_graph << h
       end
-      array_for_graph << h
     end
     return array_for_graph
   end

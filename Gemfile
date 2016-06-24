@@ -32,6 +32,10 @@ gem 'groupdate'
 
 gem 'pundit'
 
+gem 'momentjs-rails'
+
+gem 'moment_timezone-rails'
+
 gem 'stripe', '~> 1.41'
 
 gem 'gibbon', '~> 2.2'

@@ -29,6 +29,16 @@ class YahooWorker
   end
 
 
+  def test
+    date = quote.created_at.to_date
+    string = date.strftime("%m/%d/%Y")
+    string_time = string + " "+quote.last_trade_time
+    trade_time = DateTime.strptime(string_time, "%m/%d/%Y %l:%M%P")
+    quote.trade_time = trade_time
+    quote.save
+  end
+
+
 
 
   def market_moment

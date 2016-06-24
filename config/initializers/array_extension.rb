@@ -45,8 +45,17 @@ class Array
 
   def batch_to_data
     element = Hash.new
+    global_pnl = 0
+    self.each do |quote|
+      name = quote.symbol.downcase+"_pnl"
+      pnl = (((quote.ask + quote.bid)/2)-quote.previous_close)*quote.coef
+      element[name] = pnl.round(2)
+      global_pnl += pnl
+    end
+    element["pnl"] = global_pnl.round(2)
     element["value"] = ((self.global_perf).round(2))
-    element["time"] = self.first.round_time
+    element["time"] = self.first.rounded_trade_time
+    element["round_time"] = self.first.rounded_trade_time.to_time.round_off(10.minutes)
     element["first_quote_id"] = self.first.id
     element["last_quote_id"] = self.last.id
     return element
