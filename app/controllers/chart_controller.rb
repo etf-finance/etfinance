@@ -244,14 +244,22 @@ class ChartController < ApplicationController
     @chart_data = Array.new
 
     quotes_batched.each do |array|
+      if @chart_data.blank?
+        round_time = nil
+      else
+        round_time = @chart_data.last["round_time"]
+      end
       @chart_data << array.batch_to_data
+      if round_time == @chart_data.last["round_time"]
+        @chart_data = @chart_data[0...-1]
+      end
     end
 
     string = date.strftime("%m/%d/%Y")
     string_time = string + " 4:00pm"
     closing_time = DateTime.strptime(string_time, "%m/%d/%Y %l:%M%P")
 
-    @chart_data << {round_time: closing_time}
+    @chart_data << {round_time: closing_time, time: closing_time}
 
 
 
