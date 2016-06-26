@@ -2,7 +2,7 @@ class ChartController < ApplicationController
 	# require "google/api_client"
 	# require "google_drive"
 
-  @@opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 6, 0, 0)
+  @@opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 9, 30, 0)
 
   @@closing_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 16, 0, 0)
 
@@ -21,7 +21,9 @@ class ChartController < ApplicationController
 
     symbols =  ["^VIX" + future_month_names[month_number - 1].upcase, "^VIX" + future_month_names[month_number].upcase]
 
-    data = yahoo_client.quotes(symbols)
+    data = yahoo_client.quotes([symbols])
+
+    vix = yahoo_client.quotes(["^VIX"]).first.last_trade_price.to_f
 
     if data[0].last_trade_date == data[1].last_trade_date
       @i = month_number
@@ -29,31 +31,34 @@ class ChartController < ApplicationController
       @i = month_number + 1
     end
 
-    @sections_array = []
+    sections_array = []
     for n in (@i..@i+6)
-      @sections_array << '^VIX' + future_month_names[n - 1].upcase
+      sections_array << '^VIX' + future_month_names[n - 1].upcase
     end
 
     date = Time.now.to_date
 
     dif = 17 - date.day
 
-    @date_array = [date]
+    date_array = [date]
 
     if data[0].last_trade_date == data[1].last_trade_date
-      @date_array << date + dif.days
+      date_array << date + dif.days
     else
-      @date_array << date + dif.days + 1.months
+      date_array << date + dif.days + 1.months
     end
 
-    for n in (2..@sections_array.size-1)
-      @date_array << @date_array.last + 1.months
+    for n in (2..sections_array.size-1)
+      date_array << date_array.last + 1.months
     end
 
-    @yahoo_charts = @sections_array << 'VIX'
+    @date_array = date_array
 
-    @yahoo_charts << '^GSPC'
+    @sections_array = sections_array
 
+    @yahoo_charts = sections_array + ['^GSPC','^VIX']
+
+    @vix = vix
 
 
 
@@ -88,7 +93,7 @@ class ChartController < ApplicationController
       else
         value = (el.bid.to_f + el.ask.to_f)/2
       end
-      obj = {symbol: el.symbol, value: value, date: @date_array[i]}
+      obj = {symbol: el.symbol, value: value, date: @date_array[i], vix: vix}
       @futures << obj
     end
 
@@ -115,34 +120,64 @@ class ChartController < ApplicationController
 
   def premium
 
-
-
-    # @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV", "AAPL"]
-
     @refreshing_time = @@closing_time.localtime - 5.minutes
+
+    @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+
+    days = params[:days].to_i || 0
 
     @perf_class = "active active-btn"
     @futures_class = "inactive"
 
+    last_quote_date = Quote.last.created_at.to_date
+
+    if current_user.subscriber?
+      date = last_quote_date - days.days
+      @premium = true
+    else
+      date = Date.today - 4.days
+      @premium = false
+    end
+
+
+    quotes = []
+
+    while quotes.size == 0
+      quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
+      if quotes.size == 0
+        days += 1
+      end
+    end
+
+    @date = date
+
+    quotes_batched = quotes.batching
+
+    @chart_data = Array.new
+
+    quotes_batched.each do |array|
+      if @chart_data.blank?
+        round_time = nil
+      else
+        round_time = @chart_data.last["round_time"]
+      end
+      @chart_data << array.batch_to_data
+      if round_time == @chart_data.last["round_time"]
+        @chart_data = @chart_data[0...-1]
+      end
+    end
+
+    string = date.strftime("%m/%d/%Y")
+    string_time = string + " 4:00pm"
+    closing_time = DateTime.strptime(string_time, "%m/%d/%Y %l:%M%P")
+
+    @chart_data << {round_time: closing_time, time: closing_time}
+
+
+
     if current_user.subscriber?
 
-      @chart = Chart.last
-
-      @chart_data = @chart.data
-
-      element = @chart_data.find{|x| x["quotes_array"].present? }
-
-      if element.present?
-        @symbols_array = element["quotes_array"]
-      else
-        @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
-      end
-
-
-      @premium = true
-
       @market_moment = market_moment(@@opening_time, @@closing_time)
-
 
       @table_array = []
 
@@ -178,42 +213,9 @@ class ChartController < ApplicationController
           delta: delta.round.to_i
         }
         @table_array << obj
-      end
+      end 
     end
 
-    if !current_user.subscriber?
-      @premium = false
-      @chart = Chart.last(4).first
-    end
-
-
-
-
-      # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES =============
-
-    if current_user.admin?
-
-      hash = {}
-
-      quotes = Quote.where(symbol: @symbols_array).where('created_at > ?', @chart.created_at.to_date)
-      
-      quotes.each do |quote|
-        if hash[(quote.symbol.downcase+"_ask")].blank?
-          hash[(quote.symbol.downcase+"_ask")] = [quote.ask]
-          hash[(quote.symbol.downcase+"_bid")] = [quote.bid]
-        else
-          hash[(quote.symbol.downcase+"_ask")] << quote.ask
-          hash[(quote.symbol.downcase+"_bid")] << quote.bid
-        end
-      end
-
-      @quotes_hash = hash
-
-    end
-
-
-
-    # ==============  CREATION DU ARRAY POUR LE GRAPHIQUE DES QUOTES ============= 
 
 
   end
@@ -222,13 +224,10 @@ class ChartController < ApplicationController
 
   def all_quotes
 
-    Time.zone = "America/New_York"
-
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
 
     days = params[:days].to_i || 0
 
-    days = 0
     quotes = []
 
     while quotes.size == 0
@@ -334,7 +333,9 @@ class ChartController < ApplicationController
 
   def market_moment(opening_time, closing_time)
     Time.zone = "America/New_York"
-    if Time.zone.now > opening_time && Time.zone.now < closing_time - 5.minutes
+    if Time.zone.now.strftime("%A") == "Sunday" || Time.zone.now.strftime("%A") == "Saturday"
+      return "close"
+    elsif Time.zone.now > opening_time && Time.zone.now < closing_time - 5.minutes
       return "open"
     elsif Time.zone.now >= closing_time - 5.minutes && Time.now.utc < closing_time
       return "before_closing"

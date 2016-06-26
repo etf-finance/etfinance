@@ -4,7 +4,7 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
- @import "config/variables";
+@import "config/variables";
 
 html,
 
@@ -27,12 +27,37 @@ body {
     text-shadow: 2px 2px 4px #000000;
 }
 
+.btn-thumb {
+    margin-top: 30px;
+}
+
 // .arguments {
 //     background-color: rgba(255,255,255,0.7);
 //     padding: 10px;
 //     border-radius: 20px;
 //     // height: 300px;
 // }
+
+
+.test-div {
+    position: absolute;
+    top: 60px;
+    left: 60px;
+    color: $grey-color;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif
+}
+
+.graph-info {
+    font-size: 10px;
+    position: absolute;
+    top: 10px;
+    left: 60px;
+    color: $grey-color;
+    background-color: rgba(161, 161, 161, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif
+}
 
 
 .affix img{
@@ -590,9 +615,10 @@ body {
     // min-height: 600px;
     padding-top:150px;
     h1, h2, h3{
-        color: #777;
+        color: black;
         text-align: left;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
+        margin-top: 40px;
     }
     p {
         text-align: left;
@@ -648,10 +674,16 @@ body {
 
 .yahoo-chart img {
     width: 100%;
+    box-shadow: 1px 1px 8px $grey-color;
 }
 
 .yahoo-chart {
     padding: 0px;
+}
+
+.chart-padded {
+    padding: 8px;
+
 }
 
 .table {

@@ -8,7 +8,7 @@
     <%= render partial: "links" %>
     <div class="row">
       <div class="col-xs-12">
-        <h2><%= current_user.first_name%>'s values of <%= @chart.created_at.strftime("%b %d, %Y")%></h2>
+        <h2><%= current_user.first_name%>'s values of <%= @date.strftime("%b %d, %Y")%></h2>
         <% if !@premium %>
           <p><%= link_to new_subscriber_path, data: { no_turbolink: true } do %>
             <button class="btn btn-xl btn-danger">Subscribe to our live performance charts</button>
@@ -21,142 +21,64 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="perf-graph">
-          <%= content_tag :div, "", id: "line_chart", data: {section:@chart_data}, class: "chart" %>
+          <%= content_tag :div, "", id: "perf_chart", data: {section:@chart_data}, class: "chart" %>
+          <div class="graph-info"><span>Real-time with a 15 minutes delay</span><br><span>Values are refreshing every 10 minutes</span></div>
         </div>
         
       </div>
     </div>
     <hr>
 
-    <% if current_user.admin? %>
-
-      <h2>Tableau de vérification pour les admins</h2>
-
-      <table class="table table-striped perf-graph">
-        <thead>
-          <tr>
-            <th>SYMBOL</th>
-            <th>ASK</th>
-            <th>BID</th>
-            <th>CLOSE</th>
-            <th>COEF</th>
-            <th>((B+A)/2 - C)*Coef</th>
-          </tr>
-        </thead>
-        <tbody>
-        <% total = 0 %>
-        <% @symbols_array.each do |symbol| %>
-          <tr>
-            <% ask = Quote.where(symbol: symbol).last.ask %>
-            <% bid = Quote.where(symbol: symbol).last.bid %>
-            <% close = Quote.where(symbol: symbol).last.previous_close %>
-            <% coefficient = Coefficient.where(symbol: symbol).where(expired: true).last.value %>
-            <td><%= symbol %></td>
-            <td><%= ask %></td>
-            <td><%= bid %></td>
-            <td><%= close %></td>
-            <td><%= coefficient %></td>
-            <td><%= (coefficient * ((bid+ask)/2 - close)).round(2)%></td>
-          </tr>
-          <% total += (coefficient * ((bid+ask)/2 - close)) %>
-        <% end %>
-        </tbody>
-      </table>
-      <h3>PERF GLOBALE : <%= total.round(2) %></h3>
-
-      <hr>
-
-      <h2>Tableau de vérification pour les admins</h2>
-
-
-      <table class="table table-striped perf-graph">
-        <thead>
-          <tr class="first-row">
-            <th></th>
-            <th></th>
-            <% @symbols_array.each do |symbol| %>
-              <th><%= symbol%></th>
-              <th></th>
-            <%end %>
-            <th>Quote</th>
-
-          </tr>
-          <tr class="second-row">
-            <th>TIME</th>
-            <th>PERF</th>
-            <% @symbols_array.each do |symbol| %>
-              <th>ASK</th>
-              <th>BID</th>
-            <% end %>
-            <th>First</th>
-            <th>Last</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @chart_data.each do |el|%>
-            <% if el["value"].present? && el["value"] != 0 %>
-              <tr class="data-row">
-                <td><%=DateTime.parse(el["time"]).strftime("%H:%M")%></td>
-                <td><%= el["value"]%></td>
-                <% @symbols_array.each do |symbol| %>
-                  <% ask = el[symbol.downcase+"_ask"] %>
-                  <% bid = el[symbol.downcase+"_bid"] %>
-                  <td><%= ask%></td>
-                  <td><%= bid%></td>
-                <% end %>
-                <td><%= el["first_quote_id"]%></td>
-                <td><%= el["last_quote_id"]%></td>
-              </tr>
-            <% end %>
-            
-          <% end %>
-        </tbody>
-      </table>
-
-
-
-
-      <hr>
-
-
-
-    <% end %>
 
     <% if @premium %>
-      <table class="table table-striped perf-graph">
-        <thead>
-        <tr>
-          <th><%= @market_moment%></th>
-          <th>TODAY</th>
-          <th></th>
-          <th>TOMORROW</th>
-        </tr>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <table class="table table-striped perf-graph">
+          <thead>
           <tr>
-            <th>Symbol</th>
-            <th>Coefficient</th>
-            <th># shares</th>
-            <th>Coefficient</th>
-            <th># shares</th>
-            <th>Delta</th>
+            <th><%= @market_moment%></th>
+            <th>TODAY</th>
+            <th></th>
+            <th>TOMORROW</th>
           </tr>
-        </thead>
-        <tbody>
-        <% @table_array.each do |row| %>
-          <tr>
-            <td><%= row[:symbol] %></td>
-            <td><%= row[:today_coef].round(2)%></td>
-            <td><%= row[:nbr_shares_today].round%></td>
-            <td class= "<%= @new_coef_class %>"><%= row[:tomorrow_coef].round(2)%></td>
-            <td class= "<%= @new_coef_class %>"><%= row[:nbr_shares_tomorrow].round%></td>
-            <% if row[:delta] == 0 %>
-              <td> - </td>
-            <% else %>
-              <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta].round(2) %></td>
-            <% end %>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
+            <tr>
+              <th>Symbol</th>
+              <th>Coefficient</th>
+              <th># shares</th>
+              <th>Coefficient</th>
+              <th># shares</th>
+              <th>Delta</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% @table_array.each do |row| %>
+            <tr>
+              <td><%= row[:symbol] %></td>
+              <td><%= row[:today_coef].round(2)%></td>
+              <td><%= row[:nbr_shares_today].round%></td>
+              <td class= "<%= @new_coef_class %>"><%= row[:tomorrow_coef].round(2)%></td>
+              <td class= "<%= @new_coef_class %>"><%= row[:nbr_shares_tomorrow].round%></td>
+              <% if row[:delta] == 0 %>
+                <td> - </td>
+              <% else %>
+                <td class = "<%= row[:delta] > 0 ? 'success' : 'danger' %>"><%= row[:delta].round %></td>
+              <% end %>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <% if @market_moment == "open" %>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="card card-content">Find our recommandations at 3:55 EST</div>
+        </div>
+      </div>
+    <% end %>
+  
+      
     <% end %>
   </div>
   
@@ -196,44 +118,78 @@
 
 
     $(document).ready(function() {
-        barChart();
-
+        perfChart();
     });
 
 
+        function perfChart() {
 
-    function barChart() {
+        var array = [];
 
+        var data = $('#perf_chart').data('section');
 
+        for (i in data) {
+          array.push(data[i].value)
+        };
 
+        var min = Math.floor(Math.min(...array));
 
+        var max = Math.ceil(Math.max(...array));
 
+        var dif = max - min
 
+        var mainColor = $('.nav-pills > li.active > a').css("background-color");
 
+        
+        // min = -3
+        // if ((dif % 4) === 1) {
+        //   max = max + 1 ;
+        // } else if ((dif % 4) === 3) {
+        //   max = max + 2 ;
+        //   if (min < 0) {
+        //     min = min -1 ;
+        //   } else {
+        //     min = -1
+        //   }
+        // }
 
-    	Morris.Line({
+      Morris.Line({
       // ID of the element in which to draw the chart.
-      element: 'line_chart',
+      element: 'perf_chart',
       // Chart data records -- each entry in this array corresponds to a point on
       // the chart.
-      data: $('#line_chart').data('section'),
+      data: $('#perf_chart').data('section'),
       // The name of the data record attribute that contains x-values.
-      xkey: 'time',
+      xkey: 'round_time',
       // A list of names of data record attributes that contain y-values.
-      ykeys: ['value'],
+      ykeys: ['value', 'spy_pnl','vxx_pnl','vxz_pnl','xiv_pnl','ziv_pnl'],
 
       resize: true,
 
-      lineWidth: 2,
+      lineWidth: [3,1,1,1,1,1],
 
-      pointSize: 2,
+      pointSize: [3,1,1,1,1,1],
 
       dateFormat: function (x) {
         var date = new Date(x);
         if (date.getMinutes() === 0) {
-          return date.getHours()+":00";
+          return date.getUTCHours()+":00";
         } else {
-          return date.getHours()+":"+date.getMinutes();
+          return date.getUTCHours()+":"+date.getMinutes();
+        };
+      },
+
+      xLabels: "30min",
+
+      // smooth: false,
+
+
+      xLabelFormat: function (x) {
+        var date = new Date(x);
+        if (date.getMinutes() === 0) {
+          return date.getUTCHours()+":00";
+        } else {
+          return date.getUTCHours()+":"+date.getMinutes();
         };
       },
 
@@ -245,19 +201,23 @@
 
       goalStrokeWidth: 3,
 
-      lineColors: [mainColor],
+      // lineColors: [mainColor],
 
       goalLineColors: ['#C73B04'],
 
       // ymin: -100,
       // ymax: 100,
 
-      ymin: min,
-      ymax: max,
+      // ymin: min,
+      // ymax: max,
 
-      labels: ['Value']
+      labels: ['PNL', 'SPY', 'VXX', 'VXZ', 'XIV', 'ZIV']
     });
   }
+
+
+
+
 
   function refreshAt(hours, minutes, seconds) {
     var now = new Date();

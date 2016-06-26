@@ -39,11 +39,24 @@ namespace :chart do
   desc "populate Quote model"
   task both_quotes: :environment do
   # disable_active_record_logger
-    symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
-    yahoo_client = YahooFinance::Client.new
-    yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close, :last_trade_time])
-    Quote.create_batch(yahoo_data)
-    puts "done !!!"
+    if market_moment == "close"
+      # Mets les coef en expired lors de l'ouverture des marchés
+      if Quote.last.created_at.to_date != Date.today
+        coefs = Coefficient.last(10)
+        coefs.each do |c|
+          c.expired = true
+          c.save
+        end
+      end
+
+      symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
+      yahoo_client = YahooFinance::Client.new
+      yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close, :last_trade_time])
+      Quote.create_batch(yahoo_data)
+      puts "done !!!"
+    else
+      puts "market closed"
+    end
   end
 
 
@@ -111,12 +124,14 @@ namespace :chart do
   def market_moment
     Time.zone = "America/New_York"
 
-    opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 6, 5, 0)
+    opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 9, 30, 0)
     # opening_time = Time.utc(Time.now.utc.year, Time.now.utc.month, Time.now.utc.day, 10, 0, 0) + 8.minutes
-    closing_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 16, 8, 0)
-    if Time.zone.now > opening_time && Time.zone.now < closing_time - 5.minutes
+    closing_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 16, 0, 0)
+    if Time.zone.now.strftime("%A") == "Sunday" || Time.zone.now.strftime("%A") == "Saturday"
+      return "close"
+    elsif Time.zone.now > opening_time && Time.zone.now < closing_time - 5.minutes
       return "open"
-    elsif Time.zone.now >= closing_time - 5.minutes && Time.now.utc < closing_time
+    elsif Time.zone.now >= closing_time - 5.minutes && Time.now.utc < closing_time + 10.minutes
       return "before_closing"
     else
       return "close"

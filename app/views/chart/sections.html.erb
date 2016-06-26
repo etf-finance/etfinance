@@ -7,19 +7,20 @@
   <div class="row">
    <%= render partial: "links" %>
   </div>
-  <h2>Futures</h2>
+  <h2>VIX Futures over the next 6 months</h2>
     <div class="row">
-      <div class="col-xs-12 yahoo-chart perf-graph">
+      <div class="col-xs-12 col-sm-8 yahoo-chart perf-graph">
         <%= content_tag :div, "", id: "section_chart", data: {section:@futures}, class: "chart" %>
+        <div class="test-div">^VIX: <%= @vix%></div>
       </div>
     </div>
 
     <hr>
 
     <h2>Live quotations</h2>
-    <div class="row perf-graph">
+    <div class="row">
       <% @yahoo_charts.each do |quote| %>
-        <div class="col-md-4 col-sm-6 col-xs-12 yahoo-chart">
+        <div class="col-md-4 col-sm-6 col-xs-12 yahoo-chart chart-padded">
           <%= image_tag("http://chart.finance.yahoo.com/z?s=#{quote}&t=1d", :alt => "rss feed") %>
         </div>
       <% end %>
@@ -49,9 +50,11 @@
 
   for (i in data) {
   	array.push(data[i].value);
+    array.push(data[i].vix);
     date_array.push(data[i].date);
 
   };
+
 
   var monthNames = ["jan.", "feb.", "mar.", "apr.", "may", "jun.",
       "jul.", "aug.", "sept.", "oct.", "nov.", "dec."
@@ -84,18 +87,22 @@
       // The name of the data record attribute that contains x-values.
       xkey: 'date',
       // A list of names of data record attributes that contain y-values.
-      ykeys: ['value'],
+      ykeys: ['value', 'vix'],
 
       resize: true,
 
       parseTime: true,
 
-      events: date_array,
+      lineWidth: [3,2],
+
+      pointSize: [4,0],
+
+      // events: date_array,
 
       dateFormat: function (x) {
         var date = new Date(x);
         var month = date.getMonth()+1;
-          return "^XIV" + futureMonthNames[month].toUpperCase() + " ("+ new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]+")";
+          return "^VIX" + futureMonthNames[month].toUpperCase() + " ("+ new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]+")";
       },
 
 
@@ -106,13 +113,10 @@
 
       xLabels: 'month',
 
-      // xLabelFormat: function (x) { return new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]; },
+      hideHover: false,
 
-
-
-      // Labels for the ykeys -- will be displayed when you hover over the
-      // chart.
-      labels: ['Value']
+   
+      labels: ['Value', 'VIX']
     });
 
 
