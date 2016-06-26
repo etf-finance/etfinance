@@ -20,9 +20,9 @@
     
     <div class="row">
       <div class="col-xs-12">
-        <div class="perf-graph">
+        <div class="perf-graph ">
           <%= content_tag :div, "", id: "perf_chart", data: {section:@chart_data}, class: "chart" %>
-          <div class="graph-info"><span>Real-time with a 15 minutes delay</span><br><span>Values are refreshing every 10 minutes</span></div>
+          <div class="graph-info hidden-xs"><span>Real-time with a 15 minutes delay</span><br><span>Values are refreshing every 10 minutes</span></div>
         </div>
         
       </div>
@@ -181,7 +181,7 @@
 
       xLabels: "30min",
 
-      // smooth: false,
+      smooth: false,
 
 
       xLabelFormat: function (x) {
@@ -203,7 +203,7 @@
 
       // lineColors: [mainColor],
 
-      goalLineColors: ['#C73B04'],
+      goalLineColors: ["#000"],
 
       // ymin: -100,
       // ymax: 100,

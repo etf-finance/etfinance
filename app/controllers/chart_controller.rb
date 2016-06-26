@@ -73,19 +73,10 @@ class ChartController < ApplicationController
 
     
 
-    data = yahoo_client.quotes(@sections_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name])
-
+    data = yahoo_client.quotes(@sections_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
     
-    # @sections_array.each do |el|
-    #   Coefficient.create(symbol: el, value: 1+rand)
-    # end
 
-    # Construction de l'array servant aux graph des futures
     @futures = []
-
-
-
-  
 
     data.each_with_index do |el, i|
       if el.ask.to_f == 0 && el.bid.to_f == 0
@@ -93,26 +84,12 @@ class ChartController < ApplicationController
       else
         value = (el.bid.to_f + el.ask.to_f)/2
       end
-      obj = {symbol: el.symbol, value: value, date: @date_array[i], vix: vix}
+      previous_close = el.previous_close.to_f
+      close = el.close.to_f
+      obj = {symbol: el.symbol, value: value, date: @date_array[i], vix: vix, previous_close: previous_close, close: close }
       @futures << obj
     end
 
-
-    # data.each_with_index do |el|
-    #   if el.ask.to_f == 0 && el.bid.to_f == 0
-    #     value = el.last_trade_price.to_f
-    #   else
-    #     value = (el.bid.to_f + el.ask.to_f)/2
-    #   end
-    #   obj = {symbol: el.symbol, value: value, date: date}
-    #   @futures << obj
-    #   dif = 21 - date.day
-    #   if dif > 0
-    #     date += dif.days
-    #   else
-    #     date += 1.months
-    #   end
-    # end
 
   end
 
