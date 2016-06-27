@@ -13,11 +13,10 @@
         <%= content_tag :div, "", id: "section_chart", data: {section:@futures}, class: "chart" %>
         <div class="test-div">^VIX: <%= @vix%></div>
       </div>
-      <div class="col-xs-12 col-sm-4 yahoo-chart">
+      <div class="col-xs-12 col-sm-3 col-sm-offset-1 yahoo-chart">
         <table class="table table-striped small-table">
           <thead>
           <tr>
-            <th>VIX & FUTURES</th>
             <th>Symbol</th>
             <th>Last</th>
             <th>Close</th>
@@ -27,7 +26,6 @@
           <tbody>
           <% @futures.each do |future| %>
           <tr>
-            <td><%= future[:symbol]%></td>
             <td><%= future[:symbol]%></td>
             <td><%= future[:value].round(2)%></td>
             <td><%= future[:previous_close].round(2)%></td>

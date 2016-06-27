@@ -9,20 +9,30 @@
     <div class="row">
       <div class="col-xs-12">
         <h2><%= current_user.first_name%>'s values of <%= @date.strftime("%b %d, %Y")%></h2>
-        <% if !@premium %>
+      </div>
+      <div class="col-xs-6">
+        <div class="explanation-for-non-subscriber">
+          The P&L chart represent our position and strategy for <b><%= @date.strftime("%B %d")%></b> . We provide our subscribers <b>live performances of our strategy </b>and recommandations 5 minutes before the market is closing.
+        </div>
+      </div>
+       <div class="col-xs-12">
+         <% if !@premium %>
           <p><%= link_to new_subscriber_path, data: { no_turbolink: true } do %>
-            <button class="btn btn-xl btn-danger">Subscribe to our live performance charts</button>
+            <button class="btn btn-xl btn-danger">Become a subscriber now</button>
           <% end %></p>
         <% end %>
+       </div> 
+        
         
       </div>
-    </div>
     
     <div class="row">
       <div class="col-xs-12">
         <div class="perf-graph ">
           <%= content_tag :div, "", id: "perf_chart", data: {section:@chart_data}, class: "chart" %>
-          <div class="graph-info hidden-xs"><span>Real-time with a 15 minutes delay</span><br><span>Values are refreshing every 10 minutes</span></div>
+          <% if current_user.subscribed %>
+            <div class="graph-info hidden-xs"><span>Real-time with a 15 minutes delay</span><br><span>Values are refreshing every 10 minutes</span></div>
+          <% end %>
         </div>
         
       </div>
@@ -80,6 +90,8 @@
   
       
     <% end %>
+  </div>
+
   </div>
   
 </div>
@@ -140,18 +152,6 @@
 
         var mainColor = $('.nav-pills > li.active > a').css("background-color");
 
-        
-        // min = -3
-        // if ((dif % 4) === 1) {
-        //   max = max + 1 ;
-        // } else if ((dif % 4) === 3) {
-        //   max = max + 2 ;
-        //   if (min < 0) {
-        //     min = min -1 ;
-        //   } else {
-        //     min = -1
-        //   }
-        // }
 
       Morris.Line({
       // ID of the element in which to draw the chart.

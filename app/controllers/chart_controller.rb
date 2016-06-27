@@ -112,7 +112,7 @@ class ChartController < ApplicationController
       date = last_quote_date - days.days
       @premium = true
     else
-      date = Date.today - 4.days
+      date = Date.today - 5.days
       @premium = false
     end
 
@@ -154,7 +154,7 @@ class ChartController < ApplicationController
 
     if current_user.subscriber?
 
-      @market_moment = market_moment(@@opening_time, @@closing_time)
+      @market_moment = "open"
 
       @table_array = []
 
