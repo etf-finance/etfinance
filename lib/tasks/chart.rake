@@ -41,7 +41,7 @@ namespace :chart do
   # disable_active_record_logger
     if market_moment != "close"
       # Mets les coef en expired lors de l'ouverture des marchés
-      if Quote.last.present? && Quote.last.created_at.to_date != Date.today
+      if Quote.last.created_at.to_date != Date.today
         coefs = Coefficient.last(10)
         coefs.each do |c|
           c.expired = true
