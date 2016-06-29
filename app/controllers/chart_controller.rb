@@ -116,15 +116,14 @@ class ChartController < ApplicationController
       date = last_quote_date - days.days
       @premium = true
     else
-      date = Date.today - 5.days
+      date = Date.today - 4.days
       @premium = false
     end
-
 
     quotes = []
 
 
-    while quotes.size == 0
+    while quotes.size == 0 && days < 20
       quotes = Quote.where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
       if quotes.size == 0
         days += 1
