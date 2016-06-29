@@ -10,7 +10,7 @@ class YahooWorker
       Time.zone = "America/New_York"
       symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
       yahoo_client = YahooFinance::Client.new
-      yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close])
+      yahoo_data = yahoo_client.quotes(symbols_array, [:ask, :bid, :last_trade_date, :last_trade_price, :close, :symbol, :name, :previous_close, :last_trade_time])
       quote_last_trade_date = DateTime.strptime(yahoo_data.first["last_trade_date"], "%m/%d/%Y").to_date
 
 
@@ -44,8 +44,8 @@ class YahooWorker
   def market_moment
     Time.zone = "America/New_York"
 
-    opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 6, 5, 0)
-    closing_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 16, 8, 0)
+    opening_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 9, 0, 0)
+    closing_time = Time.zone.local(Time.zone.now.year, Time.zone.now.month, Time.zone.now.day, 16, 0, 0)
 
     if Time.now.to_date.cwday == 6 || Time.now.to_date.cwday == 7
       return "close"

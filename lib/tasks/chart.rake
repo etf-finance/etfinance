@@ -39,7 +39,7 @@ namespace :chart do
   desc "populate Quote model"
   task both_quotes: :environment do
   # disable_active_record_logger
-    if market_moment == "close"
+    if market_moment != "close"
       # Mets les coef en expired lors de l'ouverture des marchés
       if Quote.last.created_at.to_date != Date.today
         coefs = Coefficient.last(10)

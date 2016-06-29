@@ -10,11 +10,13 @@
       <div class="col-xs-12">
         <h2><%= current_user.first_name%>'s values of <%= @date.strftime("%b %d, %Y")%></h2>
       </div>
-      <div class="col-xs-6">
-        <div class="explanation-for-non-subscriber">
-          The P&L chart represent our position and strategy for <b><%= @date.strftime("%B %d")%></b> . We provide our subscribers <b>live performances of our strategy </b>and recommandations 5 minutes before the market is closing.
+      <% if current_user && !current_user.subscribed %>
+        <div class="col-xs-6">
+          <div class="explanation-for-non-subscriber">
+            The P&L chart represent our position and strategy for <b><%= @date.strftime("%B %d")%></b> . We provide our subscribers <b>live performances of our strategy </b>and recommandations 5 minutes before the market is closing.
+          </div>
         </div>
-      </div>
+        <% end %>
        <div class="col-xs-12">
          <% if !@premium %>
           <p><%= link_to new_subscriber_path, data: { no_turbolink: true } do %>

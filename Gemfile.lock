@@ -374,6 +374,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionmailer (~> 4.2, >= 4.2.5)
   appsignal
   autoprefixer-rails
   awesome_print

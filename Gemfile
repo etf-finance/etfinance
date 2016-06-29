@@ -27,6 +27,10 @@ gem "awesome_print", require:"ap"
 
 gem "figaro"
 
+gem 'actionmailer', '~> 4.2', '>= 4.2.5'
+
+gem "letter_opener", group: :development  
+
 gem "chartkick"
 gem 'groupdate'
 

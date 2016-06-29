@@ -97,6 +97,10 @@ class ChartController < ApplicationController
 
   def premium
 
+    # raise
+
+    
+
     @refreshing_time = @@closing_time.localtime - 5.minutes
 
     @symbols_array = ["SPY", "VXX", "VXZ", "XIV", "ZIV"]
@@ -119,8 +123,9 @@ class ChartController < ApplicationController
 
     quotes = []
 
+
     while quotes.size == 0
-      quotes = Quote.where(source: "yahoo_finance_gem").where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
+      quotes = Quote.where('created_at < ?', date + 1.days).where('created_at > ?', date).order('round_time ASC').where.not(last_trade_time: ["4:00pm", "3:59pm"]).to_a
       if quotes.size == 0
         days += 1
       end
@@ -192,7 +197,6 @@ class ChartController < ApplicationController
         @table_array << obj
       end 
     end
-
 
 
   end
