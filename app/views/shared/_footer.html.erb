@@ -1,0 +1,65 @@
+
+<div class="footer">
+  <div class="container footer-container">
+    <div class="row subcription-part">
+      <div class="col-xs-12">
+        <div class="col-xs-12 col-sm-5 col-sm-offset-1">
+          <p class="subscription-text">Recevez nos offres spéciales, découvrez les nouveautés</p>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+          <%= form_tag newsletter_subscription_path, method: :post do %>
+          <%= text_field_tag :email, nil, class: "form-control subscription-field", placeholder: "renseignez votre email ici"%>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+           <%= submit_tag "VALIDER", class: "btn btn-yes btn-block btn-roadstr" %>
+        </div>
+        <% end %>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-11 col-md-offset-1 left-part">
+        <div class="col-xs-2">
+          <p class="footer-column-title">Product</p>
+            <p class="footer-link"> Daily Forecasts</p>
+            <p class="footer-link"> Futures Datas</p>
+        </div>
+        <div class="col-xs-2">
+          <p class="footer-column-title">Company</p>
+
+            <p class="footer-link"> About</p>
+            <p class="footer-link"> Contact</p>
+            <p class="footer-link"> Term of use</p>
+        </div>
+        <div class="col-xs-8 footer-legal-information">
+            <p class="footer-legal-information">All content on this site is provided for informational purposes only and should not be interpreted as advice to buy or sell any securities. </p>
+            <p class="footer-legal-information">Volatility quotes are delayed 15 minutes unless noted otherwise. </p>
+            <p class="footer-legal-information">VIX® is a registered trademark of Chicago Board Options Exchange.</p>
+            <p class="footer-legal-information">Please see the site's Terms of Use for full legal and use policies.</p>
+            <p class="footer-legal-information">Copyright © 2012-2016 Trading Volatility LLC. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row bottom-footer-links">
+     
+    </div>
+    <div class="row lower-part">
+      <div class="col-sm-1 col-sm-offset-1 logo-roadstr-footer">
+        <div><%= image_tag("logo-roadstr-small.png", alt:"Instagram", height:"47px" )%></div>    <div class="mixpanel-logo">
+          <a href="https://mixpanel.com/f/partner"><img src="//cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics" /></a>
+        </div>
+      </div>
+      <div class="col-sm-5 disclaimer">
+        <p>Roadstr est un service de location de voitures entre particuliers :
+          nous mettons en relation des propriétaires de voitures anciennes avec des passionnés qui souhaitent louer une voiture de collection à des prix attractifs.
+          Les locations sont entièrement assurées par Allianz.
+        </p>
+      </div>
+    </div>
+
+
+
+
+    </div>
+  </div>
+</div>

@@ -142,7 +142,7 @@ class ChartController < ApplicationController
       else
         round_time = @chart_data.last["round_time"]
       end
-      @chart_data << array.batch_to_data
+      @chart_data << array.last(5).batch_to_data
       if round_time == @chart_data.last["round_time"]
         @chart_data = @chart_data[0...-1]
       end
