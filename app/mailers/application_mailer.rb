@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "ETF-FINANCE<jeromeborenstejn+etf@gmail.com>"
+  default from: "ETF<jerome+etf@roadstr.fr>"
 
   layout 'mailer'
 end

@@ -1,6 +1,7 @@
 require "open-uri"
 
 class UserMailer < ActionMailer::Base
+	default from: "ETF<jerome+etf@roadstr.fr>"
 
 	def welcome(user)
     @user = user  # Instance variable => available in view
