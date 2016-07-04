@@ -226,6 +226,12 @@ GEM
     orm_adapter (0.5.0)
     os (0.9.6)
     pg (0.18.4)
+    postmark (1.7.1)
+      json
+      rake
+    postmark-rails (0.12.0)
+      actionmailer (>= 3.0.0)
+      postmark (~> 1.7.0)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -402,6 +408,7 @@ DEPENDENCIES
   moment_timezone-rails
   momentjs-rails
   pg (~> 0.15)
+  postmark-rails
   pry-byebug
   pry-rails
   pundit

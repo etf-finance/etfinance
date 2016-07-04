@@ -29,6 +29,8 @@ gem "figaro"
 
 gem 'actionmailer', '~> 4.2', '>= 4.2.5'
 
+gem 'postmark-rails'
+
 gem "letter_opener", group: :development  
 
 gem "chartkick"
